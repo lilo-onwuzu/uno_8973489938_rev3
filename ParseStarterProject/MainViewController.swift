@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: CommonSourceController {
+class MainViewController: UIViewController {
     
     @IBOutlet weak var appLabel: UILabel!
     @IBOutlet weak var appLabel2: UILabel!

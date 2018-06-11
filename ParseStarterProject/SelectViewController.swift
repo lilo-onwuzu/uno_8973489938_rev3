@@ -130,39 +130,6 @@ class SelectViewController: CommonSourceController , UITableViewDelegate, UITabl
     // UITableView Delegate method operates on my UITableView subclass "tableView"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! SelectTableViewCell
-        // once cell is swiped right, cell.ready becomes true and the tableview is reloaded which causes this to load too
-        
-        if cell.ready {
-            cell.ready = false
-            // set swiped user as selectedUser
-            let initiallySelectedId = selectedJob.object(forKey: "selectedUser") as! String
-            // but only if the selectedUser is different from the initially selected one
-            if initiallySelectedId != users[indexPath.row] {
-                selectedJob.setValue(users[indexPath.row], forKey: "selectedUser")
-                // init messaging when match is made and add new message to array
-                let firstName = user.object(forKey: "first_name") as! String
-                // fetch selected user's name
-                var selectedName = ""
-                var userSelected = PFObject(className: "User")
-                let query: PFQuery = PFUser.query()!
-                query.whereKey("objectId", equalTo: users[indexPath.row])
-                query.findObjectsInBackground { (users, error) in
-                    if let users = users {
-                        userSelected = users[0]
-                        selectedName = userSelected.object(forKey: "first_name") as! String
-                        let introValue = "Congratulations " + selectedName + "! " + firstName + " picked you for the job. Connect with " + firstName + " here"
-                        let introMessage: [String : String] = ["intro" : introValue]
-                        var messages = [NSDictionary]()
-                        messages.append(introMessage as NSDictionary)
-                        self.selectedJob.setValue(messages, forKey: "messages")
-                        self.selectedJob.saveInBackground()
-                        // reload table view to show new user selection
-                        tableView.reloadData()
-                        
-                    }
-                }
-            }
-        }
         
         // fetch user name and image and display 
         var userAccepted = PFObject(className: "User")
@@ -196,8 +163,8 @@ class SelectViewController: CommonSourceController , UITableViewDelegate, UITabl
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toUserProfile" {
-            let vc = segue.destination as! UserProfileViewController
-            vc.reqId = userId
+//            let vc = segue.destination as! UserProfileViewController
+//            vc.reqId = userId
             
         }
     }

@@ -13,7 +13,7 @@ class SearchDetailViewController: CommonSourceController, UICollectionViewDataSo
     var listingImages = [PFFile]()
     
     @IBAction func back(_ sender: Any) {
-//        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -25,13 +25,19 @@ class SearchDetailViewController: CommonSourceController, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "searchCell", for: indexPath) as! SearchCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "searchDetailCell", for: indexPath) as! SearchDetailCollectionViewCell
         let listingImage = listingImages[indexPath.row]
         listingImage.getDataInBackground { (data, error) in
             if let data = data {
                 let imageData = NSData(data: data)
-                cell.searchImage.image = UIImage(data: imageData as Data)
-                cell.searchImage.isHidden = false
+                cell.searchDetailImage.image = UIImage(data: imageData as Data)
+                cell.searchDetailImage.isHidden = false
+                cell.searchDetailImage.sizeToFit()
+                cell.searchDetailImage.frame = UIScreen.main.bounds
+                cell.contentMode = UIViewContentMode.scaleAspectFill
+                cell.clipsToBounds = true
+                cell.searchDetailImage.contentMode = UIViewContentMode.scaleAspectFill
+                cell.searchDetailImage.clipsToBounds = true
             }
         }
         return cell

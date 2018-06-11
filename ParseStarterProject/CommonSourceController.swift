@@ -10,6 +10,37 @@ import UIKit
 
 class CommonSourceController: UIViewController {
     
+    var commonUser = PFUser()
+    
+    private func setUser(){
+        let user = PFUser.current()
+        if user?.email == nil || !(user?.isAuthenticated)! {
+            directToLogin()
+        } else {
+            commonUser = user!
+        }
+    }
+    
+    public func getUser() -> PFUser {
+        setUser()
+        return commonUser
+    }
+    
+    func directToLogin() {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+        presentingViewController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func directToMain() {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "MainViewController") as! MainViewController
+        presentingViewController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func directToCreate() {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "CreateViewController") as! CreateViewController
+        presentingViewController?.present(vc, animated: true, completion: nil)
+    }
+    
     func getLocation(object : PFObject) {
         // add location with PFGeoPoint and use block for async call
         PFGeoPoint.geoPointForCurrentLocation { (coordinates, error) in
@@ -29,7 +60,7 @@ class CommonSourceController: UIViewController {
         let sideView = vc.view.viewWithTag(55)!
         let width = self.view.bounds.width
         let height = self.view.bounds.height
-        let rect = CGRect(x: 0, y: 0, width: 0.5*width, height: height)
+        let rect = CGRect(x: 0, y: 0, width: 0.45*width, height: height)
         sideView.frame = rect
         sideView.isUserInteractionEnabled = true
         mainView.addSubview(sideView)
@@ -45,7 +76,7 @@ class CommonSourceController: UIViewController {
                                   duration: 0,
                                   options: .transitionCrossDissolve,
                                   animations: {
-                                    subview.center.x += 0.5*mainView.bounds.width
+                                    subview.center.x += 0.45*mainView.bounds.width
                 }, completion: nil)
             }
         }
@@ -97,8 +128,7 @@ class CommonSourceController: UIViewController {
     
     @IBAction func createBar(_ sender: Any) {
         self.dismiss(animated: false, completion: nil)
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "CreateViewController") as! CreateViewController
-        presentingViewController?.present(vc, animated: true, completion: nil)
+        directToCreate()
     }
     
     @IBAction func profileBar(_ sender: Any) {
@@ -113,10 +143,8 @@ class CommonSourceController: UIViewController {
         presentingViewController?.present(vc, animated: true, completion: nil)
     }
     
-    @IBAction func logOutBar(_ sender: Any, user: PFUser) {
-        print("DID THIS RUN??")
-        saveBeforeSignOff(user: user)
-        self.presentingViewController?.dismiss(animated: true, completion: nil)
+    @IBAction func logOutBar(_ sender: Any) {
+        saveThenSignOff()
     }
     
     func showActivity() -> UIActivityIndicatorView {
@@ -137,14 +165,16 @@ class CommonSourceController: UIViewController {
         UIApplication.shared.endIgnoringInteractionEvents()
     }
     
-    func saveBeforeSignOff(user: PFUser) {
+    func saveThenSignOff() {
         let empty = [String]()
+        let user = getUser()
         // clear viewed jobs from user's filtering list then logout user
         user["accepted"] = empty
         user["rejected"] = empty
         user.saveInBackground(block: { (success, error) in
             if success {
                 PFUser.logOut()
+                self.directToMain()
             }
         })
     }

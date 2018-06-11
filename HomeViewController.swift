@@ -21,9 +21,6 @@ class HomeViewController: CommonSourceController {
     @IBOutlet weak var listingsBarButton: UIButton!
     @IBOutlet weak var logOutBarButton: UIButton!
     
-    // once logged in, you can access current PFUser
-    var user = PFUser.current()!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBarButton.layer.masksToBounds = true
@@ -55,8 +52,8 @@ class HomeViewController: CommonSourceController {
     }
     
     @IBAction func logOut(_ sender: AnyObject) {
-        super.saveBeforeSignOff(user: user)
-        self.dismiss(animated: true, completion: nil)
+        super.saveThenSignOff()
+        performSegue(withIdentifier: "toMain", sender: self)
     }
 
 }

@@ -32,7 +32,7 @@ class SelectTableViewCell: UITableViewCell {
     }
     
     // drag function is called continuosly from start to end of a pan
-    func dragged (gesture: UIPanGestureRecognizer) {
+    @objc func dragged (gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self.contentView)
         // continue executing dragged() function if pan is to the right, if not, do nothing, function terminates
         if translation.x > 0 {

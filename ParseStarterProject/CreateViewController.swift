@@ -13,9 +13,9 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     
     @IBOutlet weak var titleField: UITextField!
     @IBOutlet weak var objectCount: UITextField!
-    @IBOutlet weak var nextButton: UIButton!
-    @IBOutlet weak var next2Button: UIButton!
-    @IBOutlet weak var next3Button: UIButton!
+    @IBOutlet weak var addTitleButton: UIButton!
+    @IBOutlet weak var addCountButton: UIButton!
+    @IBOutlet weak var addRateButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var homeButton: UIButton!
@@ -41,6 +41,25 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     var activityIndicator = UIActivityIndicatorView()
     var objectImages: [UIImage] = []
 
+    enum State {
+        case title, count, rate, photos, details
+    }
+    
+    func isActive(state: State) -> Bool {
+        switch state {
+            case .title:
+                return !titleField.isHidden
+            case .count:
+                return !objectCount.isHidden
+            case .rate:
+                return !rateField.isHidden
+            case .photos:
+                return !photoScroll.isHidden
+            case .details:
+                return !detailsField.isHidden
+        }
+    }
+    
     func hideAll() {
         let subviews = self.view.subviews
         for view in subviews {
@@ -56,14 +75,14 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         homeButton.setImage(home, for: .normal)
         hideAll()
         titleField.isHidden = false
-        nextButton.isHidden = false
+        addTitleButton.isHidden = false
     }
     
     func showAddCount() {
         hideAll()
         rateStepper.isHidden = false
         objectCount.isHidden = false
-        next3Button.isHidden = false
+        addCountButton.isHidden = false
     }
     
     func showAddRate() {
@@ -71,7 +90,7 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         rateField.isHidden = false
         cyclePicker.isHidden = false
         rateStepper.isHidden = false
-        next2Button.isHidden = false
+        addRateButton.isHidden = false
     }
 
     func showAddPhotos() {
@@ -94,11 +113,9 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         if titleField.text != "" && titleField.text != "First, describe your place in 1-3 words" {
             // PFUser.current() must exist here because the login screen comes before this
             let userId = (user.objectId)!
-//            let facebookId = user.object(forKey: "facebookId") as! String
             // .setValue() sets value of a type while .add() create an array type column and adds to it
             createObject.setValue(self.titleField.text!, forKey: "title")
             createObject.setValue(userId, forKey: "requesterId")
-//            createObject.setValue(facebookId, forKey: "requesterFid")
             // set empty array for users who have accepted the job on job creation
             createObject.setValue([], forKey: "userAccepted")
             // set empty string for user who has been selected for the job on job creation
@@ -107,23 +124,29 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         } else {
             super.alertWithSingleOption(title: "Invalid Entry", message: "Please add a job title")
         }
+        self.view.endEditing(true)
     }
     
     func addCount() {
-        createObject.setValue(self.cycleValue, forKey: "objectCount")
-        showAddRate()
+        if let count = Int(objectCount.text!) {
+            createObject.setValue(count, forKey: "objectCount")
+            showAddRate()
+        } else {
+            super.alertWithSingleOption(title: "Invalid Entry", message: "Please enter a valid number of roommates")
+        }
+        self.view.endEditing(true)
     }
     
     func addRate() {
         createObject.setValue(self.cycleValue, forKey: "cycle")
-        let rate = String(format: "%.2f", isADouble(rateField.text)!)
-        // before redirecting, confirm that rate still has a valid number that is non-negative
-        if isADouble(rateField.text) != nil && isADouble(rateField.text)! > 0 {
+        // confirm that rate has a valid number
+        if let rate = Int(rateField.text!) {
             createObject.setValue(rate, forKey: "rate")
             showAddPhotos()
         } else {
             super.alertWithSingleOption(title: "Invalid Entry", message: "Please enter a valid rate")
         }
+        self.view.endEditing(true)
     }
     
     func addPhotos() {
@@ -152,15 +175,7 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         } else {
             super.alertWithSingleOption(title: "Invalid Entry", message: "Please enter valid details")
         }
-    }
-    
-    // if the argument "entry" is successfully converted to an optionalDouble return the optionalDouble, else, the function terminates and isADouble() has nil value)
-    func isADouble(_ entry: String?) -> Double? {
-        var exit: Double?
-        if let entry = Double(entry!) {
-            exit = entry
-        }
-        return exit
+        self.view.endEditing(true)
     }
     
     func convertToPF(image: UIImage) -> PFFile {
@@ -168,7 +183,7 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         let imageFile = PFFile(data: imageData)!
         return imageFile
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.titleField.delegate = self
@@ -178,12 +193,12 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         imagePicker.delegate = self
         ImagePicker.delegate = self
         ImagePicker.imageLimit = 5
-        nextButton.layer.masksToBounds = true
-        nextButton.layer.cornerRadius = 10
-        next2Button.layer.masksToBounds = true
-        next2Button.layer.cornerRadius = 10
-        next3Button.layer.masksToBounds = true
-        next3Button.layer.cornerRadius = 10
+        addTitleButton.layer.masksToBounds = true
+        addTitleButton.layer.cornerRadius = 10
+        addCountButton.layer.masksToBounds = true
+        addCountButton.layer.cornerRadius = 10
+        addRateButton.layer.masksToBounds = true
+        addRateButton.layer.cornerRadius = 10
         uploadButton.layer.masksToBounds = true
         uploadButton.layer.cornerRadius = 10
         doneButton.layer.masksToBounds = true
@@ -220,35 +235,43 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     }
     
     @IBAction func home(_ sender: UIButton) {
-        if (!next2Button.isHidden) {
+        if (isActive(state: .count)) {
             showAddTitle()
-        } else if (!next3Button.isHidden) {
-            showAddCount()
-        } else if (!uploadButton.isHidden) {
-            showAddRate()
-        } else if (!doneButton.isHidden) {
-            showAddPhotos()
-        } else {
-            super.showMenu(mainView: self.view)
+            return
         }
+        if (isActive(state: .rate)) {
+            showAddCount()
+            return
+        }
+        if (isActive(state: .photos)) {
+            showAddRate()
+            return
+        }
+        if (isActive(state: .details)) {
+            showAddPhotos()
+            return
+        }
+        super.showMenu(mainView: self.view)
     }
     
     // called on touch up inside. checks to see if rateField has a value that can be converted into a Double
-    @IBAction func stepRate(_ sender: UIStepper) {
-        var enterRate: Double?
-        // if a double, save to enterRate
-        if isADouble(rateField.text) != nil {
-            // if isADouble(), add to the stepper value (+ve or -ve)
-            enterRate = isADouble(rateField.text)! + sender.value
-            sender.value = 0.00
-            // if not a double or textField is empty, show "1.00" on first tap
-        } else {
-            enterRate = 1.00
-            // zero sender.value so it does not change on first tap
-            sender.value = 0.00
+    @IBAction func step(_ sender: UIStepper) {
+        if isActive(state: .count) {
+            step(textField: objectCount, sender)
+        } else if isActive(state: .rate) {
+            step(textField: rateField, sender)
         }
-        // display enterRate value in textField on every tap
-        rateField.text = String(format: "%.2f", enterRate!)
+    }
+    
+    func step(textField: UITextField, _ sender: UIStepper) {
+        var enterRate = Int(textField.text!)
+        if enterRate != nil {
+            enterRate? += Int(sender.value)
+            textField.text = String(enterRate!)
+        } else {
+            textField.text = "1"
+        }
+        sender.value = 0
     }
     
     @IBAction func getPhotoLib(_ sender: Any) {
@@ -284,13 +307,12 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     
     // UIPickerViewDelegate method: return an attributed form of each value in cycle array into each row in picker
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        var label = view as! UILabel!
+        var label = view as? UILabel
         if label == nil {
             label = UILabel()
         }
-        var cycleRow = ""
-        cycleRow = cycle[row]
-        let title = NSAttributedString(string: cycleRow, attributes: [NSFontAttributeName: UIFont.init(name: "Pompiere-Regular", size: 28.0)! ,                                     NSForegroundColorAttributeName: UIColor.white])
+        let cycleRow = cycle[row]
+        let title = NSAttributedString(string: cycleRow, attributes: [NSAttributedStringKey.font : UIFont.init(name: "Pompiere-Regular", size: 28.0)!, NSAttributedStringKey.foregroundColor : UIColor.white])
         label?.attributedText = title
         label?.textAlignment = .center
         return label!

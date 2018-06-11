@@ -5,11 +5,12 @@ target 'ParseStarterProject' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
 
-pod 'FacebookCore'
-pod 'FacebookLogin'
-pod 'FacebookShare'
-pod 'ImagePicker'
-pod 'expanding-collection'
+pod 'Parse', inhibit_warnings: true
+pod 'FacebookCore', inhibit_warnings: true
+pod 'FacebookLogin', inhibit_warnings: true
+pod 'FacebookShare', inhibit_warnings: true
+pod 'ImagePicker', inhibit_warnings: true
+pod 'expanding-collection',  inhibit_warnings: true
   # Pods for ParseStarterProject
 
 end

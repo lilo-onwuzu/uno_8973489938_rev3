@@ -50,9 +50,9 @@ class SearchViewController: CommonSourceController, UICollectionViewDataSource, 
 	func getDetails(listing: PFObject) -> [PFFile] {
 		let title = listing.object(forKey: "title") as! String
 		objectTitle.text = title
-		let rate = listing.object(forKey: "rate") as! String
+		let rate = listing.object(forKey: "rate") as! Int
 		let cycle = listing.object(forKey: "cycle") as! String
-		objectRate.text = "$" + rate + " " + cycle
+		objectRate.text = "$" + String(rate) + " " + cycle
 		listingImages = listing.object(forKey: "images") as! [PFFile]
 		let listingGeopoint = listing.object(forKey: "location") as! PFGeoPoint
 		let userGeopoint = user.object(forKey: "location") as! PFGeoPoint

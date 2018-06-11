@@ -10,57 +10,30 @@ import UIKit
 
 class PostedTableViewCell: UITableViewCell {
     
-//    var myTableView = UITableView()
+    var myTableView = UITableView()
     var ready = false
-    var selectedRow = Int()
+    var viewController: UIViewController!
+    var postedListing = PFObject(className: "Listing")
     
     @IBOutlet weak var postedTitle: UILabel!
     @IBOutlet weak var postedRate: UILabel!
     @IBOutlet weak var notifyLabel: UILabel!
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
-//
-//    func recenter () {
-////        UIView.animate(withDuration: 0.5,
-////                       delay: 0,
-////                       usingSpringWithDamping: 0.6,
-////                       initialSpringVelocity: 0.0,
-////                       options: .transitionCrossDissolve,
-////                       animations: { self.swipeIcon.center.x += 30 },
-////                       completion: nil)
-//    }
     
-    // drag function is called continuosly from start to end of a pan
-//    func dragged (gesture: UIPanGestureRecognizer) {
-//        let translation = gesture.translation(in: self.contentView)
-//        // continue executing dragged() function if pan is to the right, if not, do nothing, function terminates
-//
-//        if translation.x > 0 {
-//            self.center.x = self.center.x + translation.x
-//            // once pan gesture ends, if selected cell , pass job in highlighted cell to selectVC, perform segue
-//
-//            if gesture.state == UIGestureRecognizerState.ended {
-//                if self.center.x > (self.bounds.width/2) {
-//                    ready = true
-//                    if let row = myTableView.indexPathForSelectedRow?.row {
-//                        selectedRow = row
-//                        // reload tableView to get "SelectVC" segue instruction
-//                        myTableView.reloadData()
-//
-//                    }
-//                }
-//                // reset cell center to center of screen
-//                self.center.x = self.bounds.width/2
-//
-//            }
-//
-//        }
-//
-//    }
+    @objc func swiped(swipe: UISwipeGestureRecognizer) {
+        switch swipe.direction {
+            case UISwipeGestureRecognizerDirection.right:
+                editButton.isHidden = false
+                deleteButton.isHidden = false
+            default:
+                return
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        // Initialization code called in tableView.dequeueReusableCell
         postedTitle.layer.masksToBounds = true
         postedTitle.layer.cornerRadius = 7
         postedRate.layer.masksToBounds = true
@@ -70,28 +43,40 @@ class PostedTableViewCell: UITableViewCell {
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
-//        super.setSelected(selected, animated: animated)
-//        // Configure the highlighted color for the selected state
-//        if selected {
-//            self.postedTitle.textColor = UIColor.black
-////            UIView.animate(withDuration: 0.5,
-////                           delay: 0,
-////                           usingSpringWithDamping: 0.6,
-////                           initialSpringVelocity: 0.0,
-////                           options: .transitionCrossDissolve,
-////                           animations: { self.swipeIcon.center.x -= 30 },
-////                           completion: { (success) in
-////                            self.recenter()
-////
-////            })
-//            // attach pan gesture recognizer to each cell so whenever the selected cell is dragged, the dragged() function runs once
-//            let pan = UIPanGestureRecognizer(target: self, action: #selector(self.dragged(gesture:)))
-//            self.addGestureRecognizer(pan)
-//
-//        } else {
-//            self.postedTitle.textColor = UIColor.white
-//
-//        }
+        super.setSelected(selected, animated: animated)
+        // Configure the highlighted color for the selected state
+        if selected {
+            self.postedTitle.textColor = UIColor.black
+            let swipe = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(swipe:)))
+            self.addGestureRecognizer(swipe)
+//            self.viewController.performSegue(withIdentifier: "toSelect", sender: self)
+        } else {
+            self.postedTitle.textColor = UIColor.white
+            editButton.isHidden = true
+            deleteButton.isHidden = true
+        }
     }
-
+    
+    @IBAction func deleteJob(_ sender: Any) {
+        let alert = UIAlertController(title: "Deleting Job", message: "Are you sure you want to delete this job?", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Abort", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Yes Delete", style: .default, handler: { (action) in
+            self.postedListing.deleteInBackground { (success, error) in
+                if (success) {
+                        self.myTableView.reloadData()
+                        alert.dismiss(animated: true, completion: nil)
+                }
+            }
+        }))
+        self.viewController.present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func editJob(_ sender: Any) {
+//        let storyboard = UIStoryboard.init()
+//        let vc = storyboard.instantiateViewController(withIdentifier: "CreateViewController") as! CreateViewController
+//        myTableView.present
+//        present(vc, animated: true, completion: nil)
+    }
 }
