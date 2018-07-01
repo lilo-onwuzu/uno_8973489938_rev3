@@ -40,9 +40,10 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     let user = PFUser.current()!
     var activityIndicator = UIActivityIndicatorView()
     var objectImages: [UIImage] = []
-
+    var inEditMode = false
+    
     enum State {
-        case title, count, rate, photos, details
+        case title, count, rate, photos, details, edit
     }
     
     func isActive(state: State) -> Bool {
@@ -57,7 +58,20 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
                 return !photoScroll.isHidden
             case .details:
                 return !detailsField.isHidden
+            case .edit:
+                return inEditMode
         }
+    }
+    
+    func step(textField: UITextField, _ sender: UIStepper) {
+        var enterRate = Int(textField.text!)
+        if enterRate != nil {
+            enterRate? += Int(sender.value)
+            textField.text = String(enterRate!)
+        } else {
+            textField.text = "1"
+        }
+        sender.value = 0
     }
     
     func hideAll() {
@@ -70,9 +84,14 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     }
     
     func showAddTitle() {
-        homeButton.setTitle("", for: .normal)
-        let home = UIImage(named: "homeImg.png")!
-        homeButton.setImage(home, for: .normal)
+        if (inEditMode) {
+            homeButton.setTitle("<", for: .normal)
+            homeButton.setImage(nil, for: .normal)
+        } else {
+            homeButton.setTitle("", for: .normal)
+            let home = UIImage(named: "homeImg.png")!
+            homeButton.setImage(home, for: .normal)
+        }
         hideAll()
         titleField.isHidden = false
         addTitleButton.isHidden = false
@@ -184,6 +203,28 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         return imageFile
     }
     
+    func setEditMode() {
+        titleField.clearsOnBeginEditing = false
+        objectCount.clearsOnBeginEditing = false
+        rateField.clearsOnBeginEditing = false
+        detailsField.clearsOnBeginEditing = false
+    }
+    
+    func populateFields() {
+        let title = createObject.object(forKey: "title") as! String
+        titleField.text = title
+        let rate = createObject.object(forKey: "rate") as! Int
+        rateField.text = String(rate)
+        let cycleValue = createObject.object(forKey: "cycle") as! String
+        let cycleIndex = cycle.index(of: cycleValue)!
+        cyclePicker.selectRow(cycleIndex, inComponent: 0, animated: false)
+        let count = createObject.object(forKey: "objectCount") as! Int
+        objectCount.text = String(count)
+        let details = createObject.object(forKey: "details") as? String
+        detailsField.text = details
+//      objectImages = createObject.object(forKey: "images") as! [PFFile]
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.titleField.delegate = self
@@ -212,6 +253,11 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         camButton.layer.masksToBounds = true
         camButton.layer.cornerRadius = 7
         super.getLocation(object: createObject)
+        showAddTitle()
+        if (isActive(state: .edit)) {
+            setEditMode()
+            populateFields()
+        }
     }
     
     @IBAction func addTitle(_ sender: UIButton) {
@@ -235,6 +281,10 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     }
     
     @IBAction func home(_ sender: UIButton) {
+        if (isActive(state: .edit) && isActive(state: .title)) {
+            dismiss(animated: true, completion: nil)
+            return
+        }
         if (isActive(state: .count)) {
             showAddTitle()
             return
@@ -261,17 +311,6 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         } else if isActive(state: .rate) {
             step(textField: rateField, sender)
         }
-    }
-    
-    func step(textField: UITextField, _ sender: UIStepper) {
-        var enterRate = Int(textField.text!)
-        if enterRate != nil {
-            enterRate? += Int(sender.value)
-            textField.text = String(enterRate!)
-        } else {
-            textField.text = "1"
-        }
-        sender.value = 0
     }
     
     @IBAction func getPhotoLib(_ sender: Any) {

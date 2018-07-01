@@ -26,7 +26,7 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UINavi
     let text_field_limit = 600
     let imagePicker = UIImagePickerController()
     let ImagePicker = ImagePickerController()
-    let user = PFUser.current()!
+    var user = PFObject(className: "User")
     
     // saves new story for user
     func runEdit() {

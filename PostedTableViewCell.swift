@@ -12,22 +12,30 @@ class PostedTableViewCell: UITableViewCell {
     
     var myTableView = UITableView()
     var ready = false
-    var viewController: UIViewController!
+    var viewController: PostedViewController!
     var postedListing = PFObject(className: "Listing")
+    var listingImages = [PFFile]()
     
     @IBOutlet weak var postedTitle: UILabel!
     @IBOutlet weak var postedRate: UILabel!
     @IBOutlet weak var notifyLabel: UILabel!
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var likedButton: UIButton!
     
-    @objc func swiped(swipe: UISwipeGestureRecognizer) {
-        switch swipe.direction {
-            case UISwipeGestureRecognizerDirection.right:
-                editButton.isHidden = false
-                deleteButton.isHidden = false
-            default:
-                return
+    @objc func swiped(gestureRecognizer: UISwipeGestureRecognizer) {
+        let swipe = gestureRecognizer
+        if swipe.state == .ended {
+            switch swipe.direction {
+                case UISwipeGestureRecognizerDirection.left:
+                    if self.isSelected {
+                        editButton.isHidden = false
+                        deleteButton.isHidden = false
+                        likedButton.isHidden = false
+                    }
+                default:
+                    return
+            }
         }
     }
     
@@ -40,20 +48,36 @@ class PostedTableViewCell: UITableViewCell {
         postedRate.layer.cornerRadius = 7
         notifyLabel.layer.masksToBounds = true
         notifyLabel.layer.cornerRadius = 7
+        editButton.layer.masksToBounds = true
+        editButton.layer.cornerRadius = 15
+        deleteButton.layer.masksToBounds = true
+        deleteButton.layer.cornerRadius = 15
+        likedButton.layer.masksToBounds = true
+        likedButton.layer.cornerRadius = 15
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
+        swipeLeft.direction = .left
+        self.addGestureRecognizer(swipeLeft)
+        if (self.isSelected) {
+            self.setSelected(true, animated: false)
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        // Configure the highlighted color for the selected state
         if selected {
-            self.postedTitle.textColor = UIColor.black
-            let swipe = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(swipe:)))
-            self.addGestureRecognizer(swipe)
-//            self.viewController.performSegue(withIdentifier: "toSelect", sender: self)
-        } else {
+            if self.isEqual(viewController.wasSelected) {
+                listingImages = postedListing.object(forKey: "images") as! [PFFile]
+                let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "SearchDetailViewController") as! SearchDetailViewController
+                vc.listingImages = listingImages
+                viewController.present(vc, animated: true, completion: nil)
+            }
             self.postedTitle.textColor = UIColor.white
+            viewController.wasSelected = self
+        } else {
+            self.postedTitle.textColor = #colorLiteral(red: 0.07987072319, green: 0.733002007, blue: 0.8219559789, alpha: 1)
             editButton.isHidden = true
             deleteButton.isHidden = true
+            likedButton.isHidden = true
         }
     }
     
@@ -63,10 +87,11 @@ class PostedTableViewCell: UITableViewCell {
             alert.dismiss(animated: true, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "Yes Delete", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
             self.postedListing.deleteInBackground { (success, error) in
-                if (success) {
-                        self.myTableView.reloadData()
-                        alert.dismiss(animated: true, completion: nil)
+                if (error == nil) {
+//                    self.viewController.transitioningDelegate.dele
+//                  self.myTableView.deleteRows(at: [self.myTableView.indexPath(for: self)!], with: .fade)
                 }
             }
         }))
@@ -74,9 +99,15 @@ class PostedTableViewCell: UITableViewCell {
     }
     
     @IBAction func editJob(_ sender: Any) {
-//        let storyboard = UIStoryboard.init()
-//        let vc = storyboard.instantiateViewController(withIdentifier: "CreateViewController") as! CreateViewController
-//        myTableView.present
-//        present(vc, animated: true, completion: nil)
+        let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "CreateViewController") as! CreateViewController
+        vc.inEditMode = true
+        vc.createObject = postedListing
+        viewController.present(vc, animated: true, completion: nil)
+    }
+    
+    @IBAction func seeLiked(_ sender: Any) {
+        let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "SelectViewController") as! SelectViewController
+        vc.selectedListing = postedListing
+        viewController.present(vc, animated: true, completion: nil)
     }
 }

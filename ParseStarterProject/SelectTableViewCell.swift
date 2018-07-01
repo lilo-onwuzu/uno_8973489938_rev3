@@ -10,83 +10,66 @@ import UIKit
 
 class SelectTableViewCell: UITableViewCell {
 
-    var selectedJob = PFObject(className: "Job")
+    var selectedListing = PFObject(className: "Listing")
     var myTableView = UITableView()
     var ready = false
+    var viewController: SelectViewController!
+    var userAccepted: PFObject!
     
-    @IBOutlet weak var userName: UILabel!
+    @IBOutlet weak var userNameField: UILabel!
     @IBOutlet weak var userImage: UIImageView!
-    @IBOutlet weak var viewProfile: UIButton!
-    @IBOutlet weak var cellBack: UILabel!
-    @IBOutlet weak var swipeIcon: UIButton!
-    @IBOutlet weak var selectLabel: UILabel!
+    @IBOutlet weak var selectUserButton: UIButton!
+    @IBOutlet weak var notifyLabel: UILabel!
     
-    func recenterIcon () {
-        UIView.animate(withDuration: 0.5,
-                       delay: 0,
-                       usingSpringWithDamping: 0.6,
-                       initialSpringVelocity: 0.0,
-                       options: .transitionCrossDissolve,
-                       animations: { self.swipeIcon.center.x += 30 },
-                       completion: nil)
-    }
-    
-    // drag function is called continuosly from start to end of a pan
-    @objc func dragged (gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: self.contentView)
-        // continue executing dragged() function if pan is to the right, if not, do nothing, function terminates
-        if translation.x > 0 {
-            self.center.x = self.center.x + translation.x
-            // once pan gesture ends, if selected cell, pass job in highlighted cell to selectVC, perform segue
-            if gesture.state == UIGestureRecognizerState.ended {
-                if self.center.x > (self.bounds.width/2) {
-                    ready = true
-                    // reload tableView to get "SelectVC" segue instruction
-                    myTableView.reloadData()
-                    
+    @objc func swiped(gestureRecognizer: UISwipeGestureRecognizer) {
+        let swipe = gestureRecognizer
+        if swipe.state == .ended {
+            switch swipe.direction {
+            case UISwipeGestureRecognizerDirection.left:
+                if self.isSelected {
+                    selectUserButton.isHidden = false
                 }
-                // reset cell center to center of screen
-                self.center.x = self.bounds.width/2
-                
+            default:
+                return
             }
         }
+    }
+    
+    func viewUserProfile() {
+        let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+        vc.user = userAccepted
+        viewController.present(vc, animated: true, completion: nil)
     }
     
     override func awakeFromNib() {
         // Initialization code
         super.awakeFromNib()
-        cellBack.layer.masksToBounds = true
-        cellBack.layer.cornerRadius = 10
         userImage.layer.masksToBounds = true
         userImage.layer.cornerRadius = 45
-        viewProfile.layer.cornerRadius = 45
-    
+        selectUserButton.layer.masksToBounds = true
+        selectUserButton.layer.cornerRadius = 15
+        userNameField.layer.masksToBounds = true
+        userNameField.layer.cornerRadius = 7
+        userNameField.isHidden = true
+        userImage.isHidden = true
+        notifyLabel.isHidden = true
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
+        swipeLeft.direction = .left
+        self.addGestureRecognizer(swipeLeft)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
         if selected {
-            // Configure the highlighted color for the selected state
-            self.userName.textColor = UIColor.black
-            UIView.animate(withDuration: 0.5,
-                           delay: 0,
-                           usingSpringWithDamping: 0.6,
-                           initialSpringVelocity: 0.0,
-                           options: .transitionCrossDissolve,
-                           animations: { self.swipeIcon.center.x -= 30 },
-                           completion: { (success) in
-                            self.recenterIcon()
-            
-            })
-            // attach pan gesture recognizer to each cell so whenever the selected cell is dragged, the dragged() function runs once
-            let pan = UIPanGestureRecognizer(target: self, action: #selector(self.dragged(gesture:)))
-            addGestureRecognizer(pan)
-            
+//            if self.isEqual(viewController.wasSelected) {
+//                viewUserProfile()
+//            }
+            self.userNameField.textColor = UIColor.white
+//            viewController.wasSelected = self
         } else {
-            self.userName.textColor = UIColor.white
-            
-        } 
+            self.userNameField.textColor = #colorLiteral(red: 0.07987072319, green: 0.733002007, blue: 0.8219559789, alpha: 1)
+            selectUserButton.isHidden = true
+        }
     }
 
 }

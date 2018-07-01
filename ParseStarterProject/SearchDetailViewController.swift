@@ -8,38 +8,86 @@
 
 import UIKit
 
-class SearchDetailViewController: CommonSourceController, UICollectionViewDataSource, UICollectionViewDelegate {
+class SearchDetailViewController: CommonSourceController {
 
-    var listingImages = [PFFile]()
+    @IBOutlet weak var searchImage: UIImageView!
+    @IBOutlet weak var detailsView: UIView!
+    @IBOutlet weak var detailsLabel: UILabel!
     
-    @IBAction func back(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+    var listing = PFObject(className: "Listings")
+    var listingImages = [PFFile]()
+    var index = 0
+    
+    func getImage(index: Int) {
+        if listingImages.count > 0 {
+            let listingImage = listingImages[index]
+            listingImage.getDataInBackground { (data, error) in
+                if let data = data {
+                    let imageData = NSData(data: data)
+                    self.searchImage.image = UIImage(data: imageData as Data)
+                }
+            }
+        } else {
+            // TO DO : Handle no images case
+        }
+    }
+    
+    func loopIndex(direction: UISwipeGestureRecognizerDirection) {
+        let maxIndex = listingImages.count - 1
+        if index >= 0 && index <= maxIndex {
+            if direction == .left && index != maxIndex {
+                index += 1
+            } else if direction == .right && index != 0 {
+                index -= 1
+            }
+        }
+    }
+    
+    func getDetails() {
+        let details = listing.object(forKey: "details") as? String
+        detailsLabel.text = details
+    }
+    
+    @objc func swiped(gestureRecognizer: UISwipeGestureRecognizer) {
+        let swipe = gestureRecognizer
+        if swipe.state == .ended {
+            switch swipe.direction {
+                case UISwipeGestureRecognizerDirection.up:
+                    detailsView.isHidden = false
+                case UISwipeGestureRecognizerDirection.down:
+                    if (!detailsView.isHidden) {
+                        detailsView.isHidden = true
+                    } else {
+                        dismiss(animated: true, completion: nil)
+                    }
+                case UISwipeGestureRecognizerDirection.right:
+                    print("right")
+                    loopIndex(direction: .right)
+                    getImage(index: index)
+                case UISwipeGestureRecognizerDirection.left:
+                    loopIndex(direction: .left)
+                    getImage(index: index)
+                default:
+                    return
+            }
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return listingImages.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "searchDetailCell", for: indexPath) as! SearchDetailCollectionViewCell
-        let listingImage = listingImages[indexPath.row]
-        listingImage.getDataInBackground { (data, error) in
-            if let data = data {
-                let imageData = NSData(data: data)
-                cell.searchDetailImage.image = UIImage(data: imageData as Data)
-                cell.searchDetailImage.isHidden = false
-                cell.searchDetailImage.sizeToFit()
-                cell.searchDetailImage.frame = UIScreen.main.bounds
-                cell.contentMode = UIViewContentMode.scaleAspectFill
-                cell.clipsToBounds = true
-                cell.searchDetailImage.contentMode = UIViewContentMode.scaleAspectFill
-                cell.searchDetailImage.clipsToBounds = true
-            }
-        }
-        return cell
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
+        swipeUp.direction = .up
+        swipeDown.direction = .down
+        swipeRight.direction = .right
+        swipeLeft.direction = .left
+        self.view.addGestureRecognizer(swipeUp)
+        self.view.addGestureRecognizer(swipeDown)
+        self.view.addGestureRecognizer(swipeRight)
+        self.view.addGestureRecognizer(swipeLeft)
+        getImage(index: index)
+        getDetails()
     }
 }

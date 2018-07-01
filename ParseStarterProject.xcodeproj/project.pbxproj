@@ -30,7 +30,6 @@
 		045E824F1E0BD0AB00B0C5C9 /* EnterMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045E824E1E0BD0AB00B0C5C9 /* EnterMessageTableViewCell.swift */; };
 		046D48E61FE220D5000056DF /* ShortStack-Regular copy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 046D48E51FE220D3000056DF /* ShortStack-Regular copy.ttf */; };
 		047ACE06209C4B91007AB1D8 /* SearchDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047ACE05209C4B91007AB1D8 /* SearchDetailViewController.swift */; };
-		047EE4C5209989C900CCD2A8 /* SearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047EE4C4209989C900CCD2A8 /* SearchCollectionViewCell.swift */; };
 		049EBB651DD9B54300D76AED /* Dosis-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 049EBB091DD9B54200D76AED /* Dosis-ExtraLight.ttf */; };
 		049EBB661DD9B54300D76AED /* Dosis-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 049EBB0A1DD9B54200D76AED /* Dosis-Light.ttf */; };
 		049EBB681DD9B54300D76AED /* Dosis-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 049EBB0C1DD9B54200D76AED /* Dosis-Regular.ttf */; };
@@ -53,7 +52,6 @@
 		04E538FD2005BB0700D6F030 /* Marvel-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04E538F92005BB0500D6F030 /* Marvel-BoldItalic.ttf */; };
 		04F175C81DBED8E800DB91B3 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F175C71DBED8E800DB91B3 /* SignUpViewController.swift */; };
 		04F6DA751DD5F8D900AB8643 /* PostedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F6DA741DD5F8D900AB8643 /* PostedTableViewCell.swift */; };
-		6575908A20C497BF00CC5DC3 /* SearchDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6575908920C497BF00CC5DC3 /* SearchDetailCollectionViewCell.swift */; };
 		6575908C20C5076800CC5DC3 /* MatchedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6575908B20C5076800CC5DC3 /* MatchedViewController.swift */; };
 		6575908E20C5082500CC5DC3 /* MatchedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6575908D20C5082500CC5DC3 /* MatchedTableViewCell.swift */; };
 		81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BA814A1A49DA1800E65899 /* AppDelegate.swift */; };
@@ -91,7 +89,6 @@
 		045E824E1E0BD0AB00B0C5C9 /* EnterMessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterMessageTableViewCell.swift; sourceTree = "<group>"; };
 		046D48E51FE220D3000056DF /* ShortStack-Regular copy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ShortStack-Regular copy.ttf"; sourceTree = "<group>"; };
 		047ACE05209C4B91007AB1D8 /* SearchDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDetailViewController.swift; sourceTree = "<group>"; };
-		047EE4C4209989C900CCD2A8 /* SearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		049EBB091DD9B54200D76AED /* Dosis-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Dosis-ExtraLight.ttf"; sourceTree = "<group>"; };
 		049EBB0A1DD9B54200D76AED /* Dosis-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Dosis-Light.ttf"; sourceTree = "<group>"; };
 		049EBB0C1DD9B54200D76AED /* Dosis-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Dosis-Regular.ttf"; sourceTree = "<group>"; };
@@ -115,7 +112,6 @@
 		04E538F92005BB0500D6F030 /* Marvel-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Marvel-BoldItalic.ttf"; sourceTree = "<group>"; };
 		04F175C71DBED8E800DB91B3 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		04F6DA741DD5F8D900AB8643 /* PostedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostedTableViewCell.swift; path = ../PostedTableViewCell.swift; sourceTree = "<group>"; };
-		6575908920C497BF00CC5DC3 /* SearchDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		6575908B20C5076800CC5DC3 /* MatchedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchedViewController.swift; sourceTree = "<group>"; };
 		6575908D20C5082500CC5DC3 /* MatchedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchedTableViewCell.swift; sourceTree = "<group>"; };
 		81BA81451A49DA1800E65899 /* ParseStarterProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ParseStarterProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -200,9 +196,7 @@
 				042922861E1EF293000799BB /* appIcon.png */,
 				0400DFD21DBC7B95006E7E75 /* Assets.xcassets */,
 				81BA81481A49DA1800E65899 /* Supporting Files */,
-				047EE4C4209989C900CCD2A8 /* SearchCollectionViewCell.swift */,
 				047ACE05209C4B91007AB1D8 /* SearchDetailViewController.swift */,
-				6575908920C497BF00CC5DC3 /* SearchDetailCollectionViewCell.swift */,
 				6575908B20C5076800CC5DC3 /* MatchedViewController.swift */,
 				6575908D20C5082500CC5DC3 /* MatchedTableViewCell.swift */,
 			);
@@ -448,7 +442,6 @@
 				042856D91DED1D450091D9BE /* SelectTableViewCell.swift in Sources */,
 				045AB9F0201083DD00E80230 /* ImageCollectionViewCell.swift in Sources */,
 				04F6DA751DD5F8D900AB8643 /* PostedTableViewCell.swift in Sources */,
-				6575908A20C497BF00CC5DC3 /* SearchDetailCollectionViewCell.swift in Sources */,
 				042567441DC31E84008ED3DE /* LoginViewController.swift in Sources */,
 				0408BC531DEDC14D0075D8D2 /* TabBarViewController.swift in Sources */,
 				04158BA01DE33B5000D741C4 /* PostedViewController.swift in Sources */,
@@ -465,7 +458,6 @@
 				04DECE0D1DB0948B0087B887 /* ProfileViewController.swift in Sources */,
 				04DECE0B1DB03F3C0087B887 /* HomeViewController.swift in Sources */,
 				6575908C20C5076800CC5DC3 /* MatchedViewController.swift in Sources */,
-				047EE4C5209989C900CCD2A8 /* SearchCollectionViewCell.swift in Sources */,
 				04F175C81DBED8E800DB91B3 /* SignUpViewController.swift in Sources */,
 				0408BC511DED97530075D8D2 /* ShowMessagesViewController.swift in Sources */,
 			);

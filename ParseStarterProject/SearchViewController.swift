@@ -9,30 +9,31 @@
 import UIKit
 import expanding_collection
 
-class SearchViewController: CommonSourceController, UICollectionViewDataSource, UICollectionViewDelegate {
+class SearchViewController: CommonSourceController {
 	
 	@IBOutlet weak var backImage: UIImageView!
 	@IBOutlet weak var objectTitle: UILabel!
 	@IBOutlet weak var objectRate: UILabel!
 	@IBOutlet weak var objectLocation: UILabel!
 	@IBOutlet weak var numLike: UILabel!
-	@IBOutlet weak var searchCollection: UICollectionView!
+	@IBOutlet weak var searchImage: UIImageView!
 	
 	var viewedJobId = String()
 	var keepId = String()
 	let user = PFUser.current()!
-	var currentListing = PFObject(className: "Listings")
 	var secondQuery = false
 	var ignoredJobs = [String]()
 	var activityIndicator = UIActivityIndicatorView()
 	var listings = [PFObject]()
-	var listingImages = [PFFile]()
+	var currentListing = PFObject(className: "Listings")
+	var currentListingImages: [PFFile]!
+	var index = 0
 	
 	func flag() {
 	}
 	
 	func hideView() {
-		searchCollection.isHidden = true
+		searchImage.isHidden = true
 		objectTitle.isHidden = true
 		objectRate.isHidden = true
 		objectLocation.isHidden = true
@@ -40,7 +41,7 @@ class SearchViewController: CommonSourceController, UICollectionViewDataSource, 
 	}
 
 	func showView() {
-		searchCollection.isHidden = false
+		searchImage.isHidden = false
 		objectTitle.isHidden = false
 		objectRate.isHidden = false
 		objectLocation.isHidden = false
@@ -53,12 +54,14 @@ class SearchViewController: CommonSourceController, UICollectionViewDataSource, 
 		let rate = listing.object(forKey: "rate") as! Int
 		let cycle = listing.object(forKey: "cycle") as! String
 		objectRate.text = "$" + String(rate) + " " + cycle
-		listingImages = listing.object(forKey: "images") as! [PFFile]
+		currentListingImages = listing.object(forKey: "images") as! [PFFile]
 		let listingGeopoint = listing.object(forKey: "location") as! PFGeoPoint
 		let userGeopoint = user.object(forKey: "location") as! PFGeoPoint
 		let distanceInMiles = listingGeopoint.distanceInMiles(to: userGeopoint)
 		objectLocation.text = String(format: "%.0f", distanceInMiles) + " miles away"
-		return listingImages
+		let interested = listing.object(forKey: "userAccepted") as! NSArray
+		numLike.text = String(interested.count)
+		return currentListingImages
 	}
 	
     func getListings() {
@@ -67,22 +70,22 @@ class SearchViewController: CommonSourceController, UICollectionViewDataSource, 
 		newQuery.limit = 5
 //		newQuery.whereKey("objectId", notContainedIn: ignoredJobs)
 		// query with PFUser's location
-		let location = user.object(forKey: "location") as? PFGeoPoint
-		if let latitude = location?.latitude {
-			if let longitude = location?.longitude {
-				newQuery.whereKey("location", withinGeoBoxFromSouthwest: PFGeoPoint(latitude: latitude - 1, longitude: longitude - 1), toNortheast:PFGeoPoint(latitude:latitude + 1, longitude: longitude + 1))
-			}
-		}
-		newQuery.findObjectsInBackground(block: { (listings, error) in
-			super.restore(activityIndicator: self.activityIndicator)
-			if let listings = listings {
-				self.listings = listings
-				self.searchCollection.reloadData()
-			} else {
-				// show no more listings alert and segue to home on action
-				super.alertWithSingleOption(title: "There are no more jobs around your area", message: "Please check again later")
-			}
-		})
+//		let location = user.object(forKey: "location") as? PFGeoPoint
+//		if let latitude = location?.latitude {
+//			if let longitude = location?.longitude {
+//				newQuery.whereKey("location", withinGeoBoxFromSouthwest: PFGeoPoint(latitude: latitude - 1, longitude: longitude - 1), toNortheast:PFGeoPoint(latitude:latitude + 1, longitude: longitude + 1))
+				newQuery.findObjectsInBackground(block: { (listings, error) in
+					super.restore(activityIndicator: self.activityIndicator)
+					if let listings = listings {
+						self.listings = listings
+						self.getListing(index: self.index)
+					} else {
+						// show no more listings alert and segue to home on action
+						super.alertWithSingleOption(title: "There are no more jobs around your area", message: "Please check again later")
+					}
+				})
+//			}
+//		}
 	}
 	
     func drag(gesture: UIPanGestureRecognizer) {
@@ -163,6 +166,53 @@ class SearchViewController: CommonSourceController, UICollectionViewDataSource, 
 //        }
     }
 
+	func getListing(index: Int) {
+		if listings.count > 0 {
+			currentListing = listings[index]
+			currentListingImages = getDetails(listing: currentListing)
+			if currentListingImages.count > 0 {
+				currentListingImages[0].getDataInBackground { (data, error) in
+					if let data = data {
+						let imageData = NSData(data: data)
+						self.searchImage.image = UIImage(data: imageData as Data)
+						self.showView()
+					}
+				}
+			}
+		} else {
+			// TO DO : Handle no listing case
+		}
+	}
+	
+	func loopIndex(direction: UISwipeGestureRecognizerDirection) {
+		let maxIndex = listings.count - 1
+		if index >= 0 && index <= maxIndex {
+			if direction == .left && index != maxIndex {
+				index += 1
+			} else if direction == .right && index != 0 {
+				index -= 1
+			}
+		}
+	}
+	
+	@objc func swiped(gestureRecognizer: UISwipeGestureRecognizer) {
+		let swipe = gestureRecognizer
+		if swipe.state == .ended {
+			switch swipe.direction {
+				case UISwipeGestureRecognizerDirection.up:
+					self.performSegue(withIdentifier: "toSearchDetail", sender: self)
+				case UISwipeGestureRecognizerDirection.right:
+					loopIndex(direction: .right)
+					getListing(index: index)
+				case UISwipeGestureRecognizerDirection.left:
+					loopIndex(direction: .left)
+					getListing(index: index)
+				default:
+					return
+			}
+		}
+	}
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 		hideView()
@@ -174,7 +224,20 @@ class SearchViewController: CommonSourceController, UICollectionViewDataSource, 
 		objectLocation.layer.cornerRadius = 10
 		backImage.layer.masksToBounds = true
 		backImage.layer.cornerRadius = 45
-		showView()
+		searchImage.isUserInteractionEnabled = true
+		let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
+		let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
+		let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
+		swipeUp.direction = .up
+		swipeRight.direction = .right
+		swipeLeft.direction = .left
+		searchImage.addGestureRecognizer(swipeUp)
+		searchImage.addGestureRecognizer(swipeRight)
+		searchImage.addGestureRecognizer(swipeLeft)
+		searchImage.layer.borderWidth = 2
+		searchImage.layer.borderColor = UIColor.white.cgColor
+		searchImage.layer.masksToBounds = true
+		searchImage.layer.cornerRadius = 15
         getListings()
 	}
 	
@@ -182,36 +245,23 @@ class SearchViewController: CommonSourceController, UICollectionViewDataSource, 
 		super.showMenu(mainView: self.view)
 	}
 	
+	@IBAction func likeListing(_ sender: Any) {
+		let user = super.getUser()
+		let userId = user.objectId!
+		currentListing.addUniqueObject(userId, forKey: "userAccepted")
+		currentListing.saveInBackground { (success, error) in
+			if (success) {
+				let accepted = self.currentListing.object(forKey: "userAccepted") as! NSArray
+				self.numLike.text = String(accepted.count)
+			}
+		}
+	}
+	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "toSearchDetail" {
 			let vc = segue.destination as! SearchDetailViewController
-			vc.listingImages = listingImages
+			vc.listingImages = currentListingImages
+			vc.listing = currentListing
 		}
 	}
-	
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return listings.count
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "searchCell", for: indexPath) as! SearchCollectionViewCell
-		let listing = listings[indexPath.row]
-		let listingImages = getDetails(listing: listing)
-		cell.listingImages = listingImages
-		if listingImages.count > 1 {
-			listingImages[0].getDataInBackground { (data, error) in
-				if let data = data {
-					let imageData = NSData(data: data)
-					cell.searchImage.image = UIImage(data: imageData as Data)
-					cell.searchImage.isHidden = false
-				}
-			}
-		}
-		return cell
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		performSegue(withIdentifier: "toSearchDetail", sender: self)
-	}
-	
 }

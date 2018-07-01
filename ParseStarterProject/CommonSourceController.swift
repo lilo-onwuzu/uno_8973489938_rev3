@@ -152,7 +152,7 @@ class CommonSourceController: UIViewController {
         let activityIndicator = UIActivityIndicatorView(frame: rect)
         activityIndicator.center = self.view.center
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         // ignore all user interactions during login activity
