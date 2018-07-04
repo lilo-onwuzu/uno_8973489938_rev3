@@ -56,7 +56,7 @@ class ShowMessagesViewController: CommonSourceController, UITableViewDelegate, U
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            let messages = selectedJob.object(forKey: "messages") as! [NSDictionary]
+            _ = selectedJob.object(forKey: "messages") as! [NSDictionary]
             return 1
         
         // section 0 is for entry textfield and send button so we only need one row for this section

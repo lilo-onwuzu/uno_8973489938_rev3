@@ -62,7 +62,7 @@ class SelectTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         if selected {
 //            if self.isEqual(viewController.wasSelected) {
-//                viewUserProfile()
+                viewUserProfile()
 //            }
             self.userNameField.textColor = UIColor.white
 //            viewController.wasSelected = self

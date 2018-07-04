@@ -80,9 +80,7 @@ class SignUpViewController: CommonSourceController, LoginButtonDelegate, UITextF
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print(presentingViewController)
-        print(presentingViewController?.childViewControllers)
-//        print(self.p )
+
     }
     
     // FBSDKLoginDelegate method
