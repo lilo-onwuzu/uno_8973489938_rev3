@@ -16,9 +16,11 @@ class SearchViewController: CommonSourceController {
 	@IBOutlet weak var objectRate: UILabel!
 	@IBOutlet weak var objectLocation: UILabel!
 	@IBOutlet weak var numLike: UILabel!
+	@IBOutlet weak var numLikeButton: UIButton!
 	@IBOutlet weak var searchImage1: UIImageView!
 	@IBOutlet weak var searchImage2: UIImageView!
 	@IBOutlet weak var searchImage3: UIImageView!
+	@IBOutlet weak var emptyLabel: UILabel!
 	
 	var activityIndicator = UIActivityIndicatorView()
 	var listings = [PFObject]()
@@ -30,7 +32,7 @@ class SearchViewController: CommonSourceController {
 	func flag() {
 	}
 	
-	func hideView() {
+	func hideAllViews() {
 		searchImage1.isHidden = true
 		searchImage2.isHidden = true
 		searchImage3.isHidden = true
@@ -38,9 +40,10 @@ class SearchViewController: CommonSourceController {
 		objectRate.isHidden = true
 		objectLocation.isHidden = true
 		numLike.isHidden = true
+		numLikeButton.isHidden = true
 	}
 
-	func showView() {
+	func showAllViews() {
 		searchImage1.isHidden = false
 		searchImage2.isHidden = false
 		searchImage3.isHidden = false
@@ -48,6 +51,7 @@ class SearchViewController: CommonSourceController {
 		objectRate.isHidden = false
 		objectLocation.isHidden = false
 		numLike.isHidden = false
+		numLikeButton.isHidden = false
 	}
 	
 	func hideCards() {
@@ -80,7 +84,7 @@ class SearchViewController: CommonSourceController {
 		let rate = listing.object(forKey: "rate") as! Int
 		let cycle = listing.object(forKey: "cycle") as! String
 		objectRate.text = "$" + String(rate) + " " + cycle
-		currentListingImages = listing.object(forKey: "images") as! [PFFile]
+		let listingImages = listing.object(forKey: "images") as! [PFFile]
 		let listingGeopoint = listing.object(forKey: "location") as! PFGeoPoint
 		let user = super.getUser()
 		let userGeopoint = user.object(forKey: "location") as! PFGeoPoint
@@ -88,7 +92,7 @@ class SearchViewController: CommonSourceController {
 		objectLocation.text = String(format: "%.0f", distanceInMiles) + " miles away"
 		let liked = listing.object(forKey: "userAccepted") as! NSArray
 		numLike.text = String(liked.count)
-		return currentListingImages
+		return listingImages
 	}
 	
     func getListings() {
@@ -105,12 +109,16 @@ class SearchViewController: CommonSourceController {
 					super.restore(activityIndicator: self.activityIndicator)
 					if let listings = listings {
 						self.listings = listings
-						self.showView()
+						self.showAllViews()
 						for listing in listings {
 							self.viewedListings.insert(listing.objectId!)
 							self.showListing(index: self.index)
 						}
+						// initial animation with spring
 						self.animateCardsOnInit()
+						// get initial current listing, updated with every call to loopIndex()
+						self.currentListing = listings[self.index]
+						self.currentListingImages = self.getDetails(listing: self.currentListing)
 					} else {
 						// show no more listings alert and segue to home on action
 						super.alertWithSingleOption(title: "There are no more jobs around your area", message: "Please check again later")
@@ -181,14 +189,20 @@ class SearchViewController: CommonSourceController {
 		let rot1 = CGFloat.pi/36
 		let rot2 = CGFloat.pi/18
 		
-		func shiftCardsRight(i1: UIImageView, i2: UIImageView, i3: UIImageView) {
-			animate(dur: 0.125, img: i1, rot: 0.0, tx: 0, ty: 0, wait: true) {
-				self.animate(dur: 0.25, img: i2, rot: rot1, tx: (h/2)*(tan(rot1)), ty: -(h/4)*(tan(rot1)), wait: true, completion: {
-					self.animate(dur: 0.5, img: i3, rot: rot2, tx: (h/2)*(tan(rot2)), ty: -(h/4)*(tan(rot2)), wait: true, completion: {
-						self.loopIndex(direction: .right)
+		func shiftCardsLeft(i1: UIImageView, i2: UIImageView, i3: UIImageView) {
+			// loop index and get card details before animation begins
+			loopIndex(direction: .left)
+			// query listing to get new listings.count before running hideUnusedCards(). this is an async task so listings.count is not updated till later. hideUnusedCards() should depend srongly on listings.count so if the async task takes longer than the delay from the animations, the card for the listing being obtained in the background should be hidden.
+			queryListings()
+			// no need to wait for async task as index does not depend on the growing listings array
+			showListing(index: self.index)
+			animate(dur: 1, img: i1, rot: -CGFloat.pi/3, tx: -5*h, ty: -5*h, wait: false, completion: nil)
+			animate(dur: 0.125, img: i2, rot: 0.0, tx: 0, ty: 0, wait: true) {
+				self.animate(dur: 0.25, img: i3, rot: rot1, tx: (h/2)*(tan(rot1)), ty: -(h/4)*(tan(rot1)), wait: true, completion: {
+					self.view.insertSubview(i1, belowSubview: i3)
+					self.animate(dur: 0.5, img: i1, rot: rot2, tx: (h/2)*(tan(rot2)), ty: -(h/4)*(tan(rot2)), wait: true, completion: {
 						self.hideUnusedCards()
-						self.showListing(index: self.index)
-						// after post-swipe display, give swipe control to img now at p0 (i2)
+						//	after one index loop, i2 becomes the main image. after swipe, give swipe control to img now at p0 (i2)
 						i2.isUserInteractionEnabled = true
 						self.addGestureRecognizers(img: i2)
 					})
@@ -196,20 +210,19 @@ class SearchViewController: CommonSourceController {
 			}
 		}
 		
-		func shiftCardsLeft(i1: UIImageView, i2: UIImageView, i3: UIImageView) {
-			animate(dur: 1.5, img: i1, rot: -CGFloat.pi/3, tx: -h, ty: -h, wait: false, completion: nil)
-			animate(dur: 0.125, img: i2, rot: 0.0, tx: 0, ty: 0, wait: true) {
-				self.animate(dur: 0.25, img: i3, rot: rot1, tx: (h/2)*(tan(rot1)), ty: -(h/4)*(tan(rot1)), wait: true, completion: {
-					self.view.insertSubview(i1, belowSubview: i3)
-					self.animate(dur: 0.5, img: i1, rot: rot2, tx: (h/2)*(tan(rot2)), ty: -(h/4)*(tan(rot2)), wait: true, completion: {
-						self.loopIndex(direction: .left)
+		func shiftCardsRight(i1: UIImageView, i2: UIImageView, i3: UIImageView) {
+			//	pre-swipe postions
+			//	i1 - image at p0 (12oclock), i2 - image at p1 (+18deg) , i3 - image at p2 (+36deg)
+			loopIndex(direction: .right)
+			showListing(index: self.index)
+			self.view.insertSubview(i3, aboveSubview: i1)
+			animate(dur: 0.125, img: i3, rot: 0.0, tx: 0, ty: 0, wait: true) {
+				self.animate(dur: 0.25, img: i2, rot: rot2, tx: (h/2)*(tan(rot2)), ty: -(h/4)*(tan(rot2)), wait: true, completion: {
+					self.animate(dur: 0.5, img: i1, rot: rot1, tx: (h/2)*(tan(rot1)), ty: -(h/4)*(tan(rot1)), wait: true, completion: {
 						self.hideUnusedCards()
-						self.showListing(index: self.index)
-						// after post-swipe display, give swipe control to img now at p0 (i2)
-						i2.isUserInteractionEnabled = true
-						self.addGestureRecognizers(img: i2)
-						// on getting the second to last card, query another listing
-						self.queryListings()
+						// after post-swipe display, give swipe control to img now at p0 (i3)
+						i3.isUserInteractionEnabled = true
+						self.addGestureRecognizers(img: i3)
 					})
 				})
 			}
@@ -217,6 +230,7 @@ class SearchViewController: CommonSourceController {
 		
 		switch i {
 			case 0:
+				// if index modulus is 0, searchImage1 is at p0 (12oclock) pre-swipe, searchImage2 is at p1 post-left-swipe, searchImage1 stays put at p0 post-right-swipe
 				print("case0")
 				if (swipe == .left) {
 					shiftCardsLeft(i1: searchImage1, i2: searchImage2, i3: searchImage3)
@@ -224,6 +238,7 @@ class SearchViewController: CommonSourceController {
 					shiftCardsRight(i1: searchImage1, i2: searchImage2, i3: searchImage3)
 				}
 			case 1:
+				// if index modulus is 1, searchImage2 is at p0 (12oclock) pre-swipe, searchImage3 is at p1 post-left-swipe, searchImage1 is at p0 post-right-swipe
 				print("case1")
 				if (swipe == .left) {
 					shiftCardsLeft(i1: searchImage2, i2: searchImage3, i3: searchImage1)
@@ -247,9 +262,9 @@ class SearchViewController: CommonSourceController {
 		let i = index % 3
 		switch i {
 			case 0:
-				currentListing = listings[index]
-				currentListingImages = getDetails(listing: currentListing)
-				getMainImage(listingImages: currentListingImages, searchImage: searchImage1)
+				let listing1 = listings[index]
+				let listing1Images = getDetails(listing: listing1)
+				getMainImage(listingImages: listing1Images, searchImage: searchImage1)
 			case 1:
 				if index < listings.count {
 					let listing2 = listings[index]
@@ -276,9 +291,12 @@ class SearchViewController: CommonSourceController {
 				index -= 1
 			}
 		}
+		currentListing = listings[index]
+		currentListingImages = getDetails(listing: currentListing)
 	}
 	
 	func queryListings() {
+		// on getting the second to last card, query another listing
 		if index >= listings.count - 2 {
 			let newQuery = PFQuery(className: "Listing")
 			newQuery.limit = 1
@@ -347,15 +365,21 @@ class SearchViewController: CommonSourceController {
 		if swipe.state == .recognized {
 			switch swipe.direction {
 				case UISwipeGestureRecognizerDirection.right:
+					animateCards(gestureRecognizer: .right)
 					print("Recognized right")
 					print(index)
-					animateCards(gestureRecognizer: .right)
 				case UISwipeGestureRecognizerDirection.left:
+					// on left swipe, if index is at max, don't proceed with animations
+					if index == listings.count - 1 {
+						hideAllViews()
+						emptyLabel.isHidden = false
+						return
+					}
+					animateCards(gestureRecognizer: .left)
 					print("Recognized left")
 					print(index)
-					animateCards(gestureRecognizer: .left)
 				default:
-					return
+					break
 			}
 		}
 		if swipe.state == .ended {
@@ -363,14 +387,14 @@ class SearchViewController: CommonSourceController {
 				case UISwipeGestureRecognizerDirection.up:
 					self.performSegue(withIdentifier: "toSearchDetail", sender: self)
 				default:
-					return
+					break
 			}
 		}
 	}
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-		hideView()
+		hideAllViews()
 		objectTitle.layer.masksToBounds = true
 		objectTitle.layer.cornerRadius = 10
 		objectRate.layer.masksToBounds = true
@@ -392,6 +416,10 @@ class SearchViewController: CommonSourceController {
 		searchImage3.layer.masksToBounds = true
 		searchImage3.layer.cornerRadius = 15
 		searchImage1.isUserInteractionEnabled = true
+		emptyLabel.layer.masksToBounds = true
+		emptyLabel.layer.cornerRadius = 15
+		emptyLabel.layer.borderWidth = 2
+		emptyLabel.layer.borderColor = UIColor.white.cgColor
 		addGestureRecognizers(img: searchImage1)
 		getListings()
 	}

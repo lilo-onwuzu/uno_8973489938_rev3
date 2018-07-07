@@ -1038,6 +1038,17 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="philipp-berndt-173197.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="GNH-zW-N0V">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" text="We've got no more listings back here. Please try again later!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="68J-yU-JLo">
+                                <rect key="frame" x="12.5" y="291" width="350.5" height="85"/>
+                                <color key="backgroundColor" red="0.076295594879999998" green="0.37976167649999998" blue="0.43262781350000001" alpha="0.43592144690000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="350.5" id="5Ko-Ju-oc6"/>
+                                    <constraint firstAttribute="height" constant="85" id="FCi-Jt-Xbh"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Marvel-Regular" family="Marvel" pointSize="24"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="uno" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nqn-iC-NYC">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
                                 <constraints>
@@ -1146,6 +1157,7 @@
                         </subviews>
                         <color key="backgroundColor" red="0.97279727458953857" green="0.99960076808929443" blue="0.99994349479675293" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="68J-yU-JLo" firstAttribute="centerY" secondItem="zmJ-Pm-ctQ" secondAttribute="centerY" id="19x-IJ-Hym"/>
                             <constraint firstItem="N2D-Ap-cAq" firstAttribute="top" secondItem="7He-hM-ZIr" secondAttribute="bottom" constant="13.5" id="3ub-1h-T6t"/>
                             <constraint firstItem="yOT-IN-iT3" firstAttribute="top" secondItem="N2D-Ap-cAq" secondAttribute="bottom" constant="8" id="69F-Oh-amG"/>
                             <constraint firstItem="7Yd-Vj-zq3" firstAttribute="top" secondItem="yOT-IN-iT3" secondAttribute="bottom" constant="31" id="76T-Vi-cHg"/>
@@ -1171,6 +1183,7 @@
                             <constraint firstItem="N2D-Ap-cAq" firstAttribute="centerX" secondItem="zmJ-Pm-ctQ" secondAttribute="centerX" id="pws-Xz-BFV"/>
                             <constraint firstItem="7He-hM-ZIr" firstAttribute="top" secondItem="gXu-Kt-QHt" secondAttribute="bottom" constant="23.5" id="rob-aL-LdZ"/>
                             <constraint firstItem="Nqn-iC-NYC" firstAttribute="leading" secondItem="zmJ-Pm-ctQ" secondAttribute="leading" id="vLg-nk-edv"/>
+                            <constraint firstItem="68J-yU-JLo" firstAttribute="centerX" secondItem="zmJ-Pm-ctQ" secondAttribute="centerX" id="vjK-Rn-POj"/>
                             <constraint firstItem="1JG-GW-b27" firstAttribute="centerX" secondItem="zmJ-Pm-ctQ" secondAttribute="centerX" id="zLY-Ww-qwe"/>
                             <constraint firstAttribute="trailing" secondItem="GNH-zW-N0V" secondAttribute="trailing" id="zj1-JF-xaj"/>
                         </constraints>
@@ -1180,7 +1193,9 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="backImage" destination="GNH-zW-N0V" id="VQQ-Wj-Eol"/>
+                        <outlet property="emptyLabel" destination="68J-yU-JLo" id="BoL-DS-FCJ"/>
                         <outlet property="numLike" destination="tjL-lo-ShM" id="cAF-x5-6RV"/>
+                        <outlet property="numLikeButton" destination="yUa-CQ-QMD" id="Et7-dW-fP1"/>
                         <outlet property="objectLocation" destination="yOT-IN-iT3" id="fRQ-28-O1e"/>
                         <outlet property="objectRate" destination="N2D-Ap-cAq" id="qUh-2a-gVL"/>
                         <outlet property="objectTitle" destination="7He-hM-ZIr" id="gAS-re-a3Q"/>
