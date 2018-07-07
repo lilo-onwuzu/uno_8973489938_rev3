@@ -15,6 +15,7 @@ class PostedTableViewCell: UITableViewCell {
     var viewController: PostedViewController!
     var postedListing = PFObject(className: "Listing")
     var listingImages = [PFFile]()
+    var postedListings = [PFObject]()
     
     @IBOutlet weak var postedTitle: UILabel!
     @IBOutlet weak var postedRate: UILabel!
@@ -28,11 +29,21 @@ class PostedTableViewCell: UITableViewCell {
         if swipe.state == .ended {
             switch swipe.direction {
                 case UISwipeGestureRecognizerDirection.left:
-                    if self.isSelected {
-                        editButton.isHidden = false
-                        deleteButton.isHidden = false
-                        likedButton.isHidden = false
-                    }
+                    editButton.isHidden = false
+                    deleteButton.isHidden = false
+                    likedButton.isHidden = false
+                    self.layer.transform = CATransform3DMakeScale(0.1,0.1,1)
+                    UIView.animate(withDuration: 0.3, animations: {
+                        self.layer.transform = CATransform3DMakeScale(1.05,1.05,1)
+                    },completion: { finished in
+                        UIView.animate(withDuration: 0.1, animations: {
+                            self.layer.transform = CATransform3DMakeScale(1,1,1)
+                        })
+                    })
+                case UISwipeGestureRecognizerDirection.right:
+                    editButton.isHidden = true
+                    deleteButton.isHidden = true
+                    likedButton.isHidden = true
                 default:
                     return
             }
@@ -54,6 +65,7 @@ class PostedTableViewCell: UITableViewCell {
         deleteButton.layer.cornerRadius = 15
         likedButton.layer.masksToBounds = true
         likedButton.layer.cornerRadius = 15
+        notifyLabel.isHidden = true
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.swiped(gestureRecognizer:)))
         swipeLeft.direction = .left
         self.addGestureRecognizer(swipeLeft)
@@ -65,6 +77,9 @@ class PostedTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selected {
+            editButton.isHidden = true
+            deleteButton.isHidden = true
+            likedButton.isHidden = true
             if self.isEqual(viewController.wasSelected) {
                 listingImages = postedListing.object(forKey: "images") as! [PFFile]
                 let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "SearchDetailViewController") as! SearchDetailViewController
@@ -75,27 +90,11 @@ class PostedTableViewCell: UITableViewCell {
             viewController.wasSelected = self
         } else {
             self.postedTitle.textColor = #colorLiteral(red: 0.07987072319, green: 0.733002007, blue: 0.8219559789, alpha: 1)
-            editButton.isHidden = true
-            deleteButton.isHidden = true
-            likedButton.isHidden = true
         }
     }
     
     @IBAction func deleteJob(_ sender: Any) {
-        let alert = UIAlertController(title: "Deleting Job", message: "Are you sure you want to delete this job?", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Abort", style: .default, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        alert.addAction(UIAlertAction(title: "Yes Delete", style: .default, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
-            self.postedListing.deleteInBackground { (success, error) in
-                if (error == nil) {
-//                    self.viewController.transitioningDelegate.dele
-//                  self.myTableView.deleteRows(at: [self.myTableView.indexPath(for: self)!], with: .fade)
-                }
-            }
-        }))
-        self.viewController.present(alert, animated: true, completion: nil)
+        viewController.deleteJob(postedListing: postedListing)
     }
     
     @IBAction func editJob(_ sender: Any) {

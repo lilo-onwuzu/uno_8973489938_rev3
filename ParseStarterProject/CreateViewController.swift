@@ -118,6 +118,23 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         uploadButton.isHidden = false
         libButton.isHidden = false
         camButton.isHidden = false
+        if isActive(state: .edit) {
+            let images = createObject.object(forKey: "images") as! [PFFile]
+            if images.count > 0 {
+                for image in images {
+                    image.getDataInBackground { (data, error) in
+                        if let data = data {
+                            let imageData = NSData(data: data)
+                            let uiImage = UIImage(data: imageData as Data)!
+                            if !self.isDup(newImage: uiImage) {
+                                self.objectImages.append(uiImage)
+                                self.photoScroll.reloadData()
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func showAddDetails() {
@@ -147,7 +164,8 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     }
     
     func addCount() {
-        if let count = Int(objectCount.text!) {
+        let count = Int(objectCount.text!)
+        if count != nil && count! > 0 {
             createObject.setValue(count, forKey: "objectCount")
             showAddRate()
         } else {
@@ -159,7 +177,8 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     func addRate() {
         createObject.setValue(self.cycleValue, forKey: "cycle")
         // confirm that rate has a valid number
-        if let rate = Int(rateField.text!) {
+        let rate = Int(rateField.text!)
+        if rate !=  nil && rate! > 0 {
             createObject.setValue(rate, forKey: "rate")
             showAddPhotos()
         } else {
@@ -222,7 +241,12 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         objectCount.text = String(count)
         let details = createObject.object(forKey: "details") as? String
         detailsField.text = details
-//      objectImages = createObject.object(forKey: "images") as! [PFFile]
+    }
+    
+    
+    func deletePhoto(indexPath: IndexPath) {
+        objectImages.remove(at: indexPath.row)
+        photoScroll.reloadData()
     }
     
     override func viewDidLoad() {
@@ -370,29 +394,42 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     // protocol for UIImagePickerDelegate (camera only)
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            objectImages.append(image)
+            if !isDup(newImage: image) {
+                objectImages.append(image)
+                photoScroll.reloadData()
+            }
         }
         // dismiss imagePicker controller
         self.dismiss(animated: true, completion: nil)
     }
     
-    // protocol for custom module ImagePickerDelegate (library only)
+    // protocol for custom module ImagePickerDelegate (photolibrary only)
     func wrapperDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
 
     }
 
-    // protocol for custom module ImagePickerDelegate (library only)
+    func isDup(newImage: UIImage) -> Bool {
+        var dup = false
+        if objectImages.contains(where: { UIImagePNGRepresentation($0) == UIImagePNGRepresentation(newImage) }) {
+            dup = true
+        }
+        return dup
+    }
+    
+    // protocol for custom module ImagePickerDelegate (photolibrary only)
     func doneButtonDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
         for image in images {
-            objectImages.append(image)
-            photoScroll.reloadData()
+            if !isDup(newImage: image) {
+                objectImages.append(image)
+                photoScroll.reloadData()
+            }
         }
         self.dismiss(animated: true, completion: nil)
     }
     
     // protocol for custom module ImagePickerDelegate (library only)
     func cancelButtonDidPress(_ imagePicker: ImagePickerController) {
-
+        self.dismiss(animated: true, completion: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -402,6 +439,8 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! ImageCollectionViewCell
         cell.imageView.image = objectImages[indexPath.row]
+        cell.myCollectionView = photoScroll
+        cell.viewController = self
         return cell
     }
     

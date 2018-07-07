@@ -10,6 +10,9 @@ import UIKit
 
 class ImageCollectionViewCell: UICollectionViewCell {
     
+    var myCollectionView: UICollectionView!
+    var viewController: CreateViewController!
+    
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var deleteButton: UIButton!
     
@@ -22,5 +25,9 @@ class ImageCollectionViewCell: UICollectionViewCell {
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 15
+    }
+    
+    @IBAction func deletePhoto(_ sender: Any) {
+        viewController.deletePhoto(indexPath: myCollectionView.indexPath(for: self)!)
     }
 }

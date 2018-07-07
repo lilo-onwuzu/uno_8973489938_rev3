@@ -61,7 +61,6 @@ class SearchDetailViewController: CommonSourceController {
                         dismiss(animated: true, completion: nil)
                     }
                 case UISwipeGestureRecognizerDirection.right:
-                    print("right")
                     loopIndex(direction: .right)
                     getImage(index: index)
                 case UISwipeGestureRecognizerDirection.left:

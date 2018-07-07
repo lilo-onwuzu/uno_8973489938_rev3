@@ -26,9 +26,7 @@ class SelectTableViewCell: UITableViewCell {
         if swipe.state == .ended {
             switch swipe.direction {
             case UISwipeGestureRecognizerDirection.left:
-                if self.isSelected {
-                    selectUserButton.isHidden = false
-                }
+                selectUserButton.isHidden = false
             default:
                 return
             }

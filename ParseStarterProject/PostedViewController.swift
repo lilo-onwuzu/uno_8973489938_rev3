@@ -42,6 +42,23 @@ class PostedViewController: CommonSourceController, UITableViewDelegate, UITable
         }
     }
     
+    func deleteJob(postedListing: PFObject) {
+        let alert = UIAlertController(title: "Deleting Job", message: "Are you sure you want to delete this job?", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Abort", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Yes Delete", style: .default, handler: { (action) in
+            alert.dismiss(animated: true, completion: nil)
+            self.postedListings.remove(at: (self.postedListings.index(of: postedListing))!)
+            postedListing.deleteInBackground { (success, error) in
+                if (error == nil) {
+                    self.tableView.reloadData()
+                }
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -72,25 +89,6 @@ class PostedViewController: CommonSourceController, UITableViewDelegate, UITable
         return postedListings.count
     }
     
-    func deleteRow(listing: PFObject) {
-        tableView.reloadData()
-//        let alert = UIAlertController(title: "Deleting Job", message: "Are you sure you want to delete this job?", preferredStyle: UIAlertControllerStyle.alert)
-//        alert.addAction(UIAlertAction(title: "Abort", style: .default, handler: { (action) in
-//            alert.dismiss(animated: true, completion: nil)
-//        }))
-//        alert.addAction(UIAlertAction(title: "Yes Delete", style: .default, handler: { (action) in
-//            self.postedListing.deleteInBackground { (success, error) in
-//                if (success) {
-//                    print("SUCCESS")
-//                    self.myTableView.reloadData()
-//                }
-//            }
-//            alert.dismiss(animated: true, completion: nil)
-//            
-//        }))
-//        self.viewController.present(alert, animated: true, completion: nil)
-    }
-    
     // UITableView Delegate method operates on my UITableView subclass "tableView"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "postedCell", for: indexPath) as! PostedTableViewCell
@@ -98,14 +96,19 @@ class PostedViewController: CommonSourceController, UITableViewDelegate, UITable
         let postedTitle = listing.object(forKey: "title") as! String
         let postedCycle = listing.object(forKey: "cycle") as! String
         let postedRate = listing.object(forKey: "rate") as! Int
-        let interested = listing.object(forKey: "userAccepted") as! NSArray
+        let liked = listing.object(forKey: "userAccepted") as! NSArray
+        let likedCount = liked.count
         cell.postedTitle?.text = postedTitle
         cell.postedRate?.text = "$" + String(postedRate) + " " + postedCycle
-        cell.notifyLabel.text = String(interested.count) + " INTERESTED!"
+        if likedCount > 0 {
+            cell.notifyLabel.isHidden = false
+            cell.notifyLabel.text = String(likedCount) + " INTERESTED!"
+        }
         // tableView is given to cell to allow us to reload the tableview from inside cell
         cell.myTableView = tableView
         cell.viewController = self
         cell.postedListing = listing
+        cell.postedListings = postedListings
         return cell
     }
 

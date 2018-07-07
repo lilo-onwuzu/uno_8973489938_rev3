@@ -28,6 +28,7 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func login(_ sender: AnyObject) {
+        self.view.endEditing(true)
         let user = PFUser.current()!
         if user.isAuthenticated && user.email != nil {
             // if user is signed in. direct to home
