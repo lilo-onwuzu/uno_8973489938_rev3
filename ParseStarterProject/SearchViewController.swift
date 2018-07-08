@@ -188,6 +188,8 @@ class SearchViewController: CommonSourceController {
 		let i = index % 3
 		let rot1 = CGFloat.pi/36
 		let rot2 = CGFloat.pi/18
+		currentListing = listings[index]
+		currentListingImages = getDetails(listing: currentListing)
 		
 		func shiftCardsLeft(i1: UIImageView, i2: UIImageView, i3: UIImageView) {
 			// loop index and get card details before animation begins
@@ -283,16 +285,14 @@ class SearchViewController: CommonSourceController {
 	}
 	
 	func loopIndex(direction: UISwipeGestureRecognizerDirection) {
-		let maxIndex = listings.count - 1
-		if index >= 0 && index <= maxIndex {
-			if direction == .left && index != maxIndex {
+		let maxIndex = listings.count
+		if index >= 0 && index < maxIndex {
+			if direction == .left {
 				index += 1
 			} else if direction == .right && index != 0 {
 				index -= 1
 			}
 		}
-		currentListing = listings[index]
-		currentListingImages = getDetails(listing: currentListing)
 	}
 	
 	func queryListings() {
@@ -350,7 +350,7 @@ class SearchViewController: CommonSourceController {
 						searchImage1.isHidden = false
 					} else if index == count - 1 {
 						hideCards()
-						searchImage2.isHidden = false
+						searchImage3.isHidden = false
 					}
 				default:
 					return
@@ -373,7 +373,7 @@ class SearchViewController: CommonSourceController {
 					if index == listings.count - 1 {
 						hideAllViews()
 						emptyLabel.isHidden = false
-						return
+						break
 					}
 					animateCards(gestureRecognizer: .left)
 					print("Recognized left")
