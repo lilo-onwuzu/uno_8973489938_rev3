@@ -9,9 +9,8 @@
 import UIKit
 import ImagePicker
 
-class ProfileViewController: CommonSourceController, UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ImagePickerDelegate {
+class ProfileViewController: CommonSourceController, UITextFieldDelegate, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ImagePickerDelegate {
     
-    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var photoButton: UIButton!
     @IBOutlet weak var libButton: UIButton!
     @IBOutlet weak var camButton: UIButton!
@@ -21,14 +20,18 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UINavi
     @IBOutlet weak var changeButton: UIButton!
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var userNameField: UILabel!
+    @IBOutlet weak var editDetailsButton: UIButton!
+    @IBOutlet weak var passwordUpdatedLabel: UILabel!
     
-    var showMenu = true
     let text_field_limit = 600
     let imagePicker = UIImagePickerController()
     let ImagePicker = ImagePickerController()
-    var user = PFObject(className: "User")
+    var subjectUser: PFUser!
+    var objectUser: PFUser!
+    var user: PFUser!
+    var userId = ""
     
-    // saves new story for user
     func runEdit() {
 //        let editStory = self.editStory.text!
 //        // update displayed user story
@@ -50,13 +53,11 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UINavi
         if (libButton.isHidden || camButton.isHidden) {
             // slide scrollview down to display photo editing bar
             UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
-                self.scrollView.center.y += 150
                 self.camButton.isHidden = false
                 self.libButton.isHidden = false
             }, completion: nil)
         } else {
             UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
-                self.scrollView.center.y -= 150
                 self.camButton.isHidden = true
                 self.libButton.isHidden = true
             }, completion: nil)
@@ -66,36 +67,183 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UINavi
     func saveImage(image: UIImage) {
         let imageData = UIImageJPEGRepresentation(image, 0.5)!
         let imageFile = PFFile(data: imageData)!
-        var images : [PFFile] = user["images"] as? [PFFile] ?? []
-        images.append(imageFile)
-        user["images"] = images
-        user["image"] = images[images.startIndex]
+        user["image"] = imageFile
         userImage.image = image
+    }
+    
+    @objc func swiped(gestureRecognizer: UISwipeGestureRecognizer) {
+        let swipe = gestureRecognizer
+        switch swipe.direction {
+            case UISwipeGestureRecognizerDirection.up:
+                if objectUser == subjectUser {
+                    removeImageMode()
+                }
+            case UISwipeGestureRecognizerDirection.down:
+                if objectUser == subjectUser {
+                    displayImageMode()
+                }
+            default:
+                return;
+        }
+    }
+    
+    func displayImageMode() {
+        userImage.isHidden = false
+        userNameField.isHidden = false
+    }
+
+    func removeImageMode() {
+        userImage.isHidden = true
+        userNameField.isHidden = true
+    }
+    
+    @objc func savePassword() {
+        user.password = self.password.text!
+        user.saveInBackground { (success, error) in
+            if success {
+                self.passwordUpdatedLabel.text = "Your password has been updated!"
+                self.passwordUpdatedLabel.isHidden = false
+            } else {
+                if let error = error {
+                    super.alertWithSingleOption(title: "Update Password Error", message: error.localizedDescription)
+                }
+            }
+            // reset password field
+            self.password.text = ""
+            self.confirmPassword.text = ""
+            self.view.endEditing(true)
+        }
+    }
+    
+    func finallyDeleteUser() {
+        self.user.deleteInBackground(block: { (success, error) in
+            if success {
+                PFUser.logOut()
+                self.performSegue(withIdentifier: "toHome", sender: self)
+                
+            }
+        })
+    }
+    
+    func deleteAsAccepted () {
+        // then delete user as selectedUser for all jobs
+        let queryReceivedJobs = PFQuery(className: "Job")
+        queryReceivedJobs.whereKey("userAccepted", contains: userId)
+        queryReceivedJobs.findObjectsInBackground { (objects, error) in
+            if let objects = objects {
+                if objects.count > 0 {
+                    for object in objects {
+                        var userAccepted = object.object(forKey: "userAccepted") as! [String]
+                        // remove userId from every jobs array of acceptedUsers
+                        for id in userAccepted {
+                            if id == self.userId {
+                                userAccepted.remove(at: userAccepted.index(of: id)!)
+                                object.setValue(userAccepted, forKey: "userAccepted")
+                                object.saveInBackground(block: { (success, error) in
+                                    if success {
+                                        self.finallyDeleteUser()
+                                    }
+                                })
+                            }
+                        }
+                    }
+                } else {
+                    // go to next step even if there are no objects
+                    self.finallyDeleteUser()
+                }
+            }
+        }
+    }
+    
+    func deleteAsSelected () {
+        // then delete user as selectedUser for all jobs
+        let queryReceivedJobs = PFQuery(className: "Job")
+        queryReceivedJobs.whereKey("selectedUser", equalTo: userId)
+        queryReceivedJobs.findObjectsInBackground { (objects, error) in
+            if let objects = objects {
+                if objects.count > 0 {
+                    for object in objects {
+                        // empty selected user
+                        object.setValue("", forKey: "selectedUser")
+                        // empty messages too since messages only initiates with handshake agreement
+                        // this job will no longer be listed in message vc until another match is made
+                        object.remove(forKey: "messages")
+                        object.saveInBackground(block: { (success, error) in
+                            if success {
+                                self.deleteAsAccepted()
+                            }
+                        })
+                    }
+                } else {
+                    // go to next step even if there are no objects
+                    self.deleteAsAccepted()
+                }
+            }
+        }
+    }
+    
+    func deleteUser() {
+        // first delete all user's posted jobs
+        let queryPostedJobs = PFQuery(className: "Job")
+        queryPostedJobs.whereKey("requesterId", equalTo: userId)
+        queryPostedJobs.findObjectsInBackground { (objects, error) in
+            if let objects = objects {
+                if objects.count > 0 {
+                    for object in objects {
+                        object.deleteInBackground(block: { (success, error) in
+                            if success {
+                                self.deleteAsSelected()
+                            }
+                        })
+                    }
+                } else {
+                    // go to next step even if there are no objects
+                    self.deleteAsSelected()
+                }
+            }
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         changeButton.layer.masksToBounds = true
         changeButton.layer.cornerRadius = 10
+        editDetailsButton.layer.masksToBounds = true
+        editDetailsButton.layer.cornerRadius = 10
         deleteButton.layer.masksToBounds = true
         deleteButton.layer.cornerRadius = 10
+        userDetails.layer.masksToBounds = true
+        userDetails.layer.cornerRadius = 10
         imagePicker.delegate = self
         ImagePicker.delegate = self
         ImagePicker.imageLimit = 3
-        
-//        editStory.delegate = self
-//        let firstName = user.object(forKey: "first_name") as! String
-//        let lastName = user.object(forKey: "last_name") as! String
-//        userName.text = firstName + " " + lastName
-        
+        userDetails.delegate = self
+        libButton.layer.masksToBounds = true
+        libButton.layer.cornerRadius = 10
+        camButton.layer.masksToBounds = true
+        camButton.layer.cornerRadius = 10
+        displayImageMode()
+        if objectUser.isEqual(subjectUser) {
+            user = subjectUser
+        } else {
+            user = objectUser
+        }
+        let firstName = user.object(forKey: "first_name") as! String
+        let lastName = user.object(forKey: "last_name") as! String
+        userNameField.text = firstName + " " + lastName
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swiped(gestureRecognizer:)))
+        swipeUp.direction = .up
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(swiped(gestureRecognizer:)))
+        swipeDown.direction = .down
+        self.view.isUserInteractionEnabled = true
+        self.view.addGestureRecognizer(swipeUp)
+        self.view.addGestureRecognizer(swipeDown)
         // if story already exists for user, convert it to string (if possible- no "!" in typecast) and display it
-//        if let story = user.object(forKey: "story") {
-//            userStory.text = String(describing: story)
-//            userStory.sizeToFit()
-//
-//        }
-        
-       // display user's saved image. user image data always exists in Parse
+        if let story = user.object(forKey: "story") {
+            userDetails.text = String(describing: story)
+            userDetails.sizeToFit()
+        }
+       // display user's saved image
         if let imageFile = user.object(forKey: "image") as? PFFile {
             imageFile.getDataInBackground { (data, error) in
                 if let data = data {
@@ -120,26 +268,40 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UINavi
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-    // add inset below to allow tect field to be visible during editing
-//    @IBAction func beginEdit(_ sender: Any) {
-//        scrollView.contentInset.bottom += CGFloat(300)
-//
-//        // populate entry field with already stored story before editing
-//        if let story = user.object(forKey: "story") {
-////            editStory.text = String(describing: story)
-////        }
-//    }
-//
-//    @IBAction func endEditing(_ sender: Any) {
-//        // remove inset once editing ends
-//        scrollView.contentInset.bottom -= CGFloat(300)
-//    }
-//
-//    // edit action executes "after editing ends" or return button is tapped
-//    @IBAction func edit(_ sender: AnyObject) {
-//        runEdit()
-//
-//    }
+    @IBAction func changePassword(_ sender: Any) {
+        if password.isHidden {
+            editDetailsButton.isHidden = true
+            deleteButton.isHidden = true
+            password.isHidden = false
+            confirmPassword.isHidden = false
+        } else {
+            let getPassword = self.password.text!
+            let confirmPassword = self.confirmPassword.text!
+            var actions = [String: String]()
+            actions["Yes"] = "savePassword"
+            actions["Cancel"] = ""
+            // password character length must be greater than 5
+            if getPassword.count >= 6 {
+                if getPassword == confirmPassword {
+                    super.alertWithMultipleOptions(title: "Confirm Password Change", message: "Are you sure you want to change your password?", options: actions)
+                } else {
+                    super.alertWithSingleOption(title: "Invalid Password", message: "Your passwords must match")
+                }
+            } else {
+                super.alertWithSingleOption(title: "Invalid Password", message: "Your password must have at least 6 characters")
+            }
+        }
+    }
+    
+    @IBAction func editDetails(_ sender: Any) {
+        changeButton.isHidden = true
+        deleteButton.isHidden = true
+        userDetails.isHidden = false
+    }
+    
+    @IBAction func deleteAccount(_ sender: Any) {
+        
+    }
     
     @IBAction func home(_ sender: Any) {
         super.showMenu(mainView: self.view)
@@ -174,7 +336,7 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UINavi
     
     // protocol for custom module ImagePickerDelegate (library only)
     func cancelButtonDidPress(_ imagePicker: ImagePickerController) {
-        
+        self.dismiss(animated: true, completion: nil)
     }
 
     // tap anywhere to escape keyboard. showMenu prevents the need for a double tap before menuView can be displayed again

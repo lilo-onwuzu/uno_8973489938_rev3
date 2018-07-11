@@ -57,7 +57,7 @@ class SelectViewController: CommonSourceController , UITableViewDelegate, UITabl
         queryUser.whereKey("objectId", equalTo: usersAccepted[indexPath.row])
         queryUser.getFirstObjectInBackground { (user, error) in
             if let userAccepted = user {
-                cell.userAccepted = userAccepted
+                cell.userAccepted = userAccepted as! PFUser
                 let firstName = userAccepted.object(forKey: "first_name") as! String
                 let lastName = userAccepted.object(forKey: "last_name") as! String
                 cell.userNameField.text = firstName + " " + lastName

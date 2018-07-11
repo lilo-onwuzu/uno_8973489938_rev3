@@ -14,7 +14,7 @@ class SelectTableViewCell: UITableViewCell {
     var myTableView = UITableView()
     var ready = false
     var viewController: SelectViewController!
-    var userAccepted: PFObject!
+    var userAccepted: PFUser!
     
     @IBOutlet weak var userNameField: UILabel!
     @IBOutlet weak var userImage: UIImageView!
@@ -35,7 +35,7 @@ class SelectTableViewCell: UITableViewCell {
     
     func viewUserProfile() {
         let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-        vc.user = userAccepted
+        vc.objectUser = userAccepted
         viewController.present(vc, animated: true, completion: nil)
     }
     

@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -542,12 +541,11 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Marvel-Regular" family="Marvel" pointSize="30"/>
                                 <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="5"/>
-                                <state key="normal" title="PROFILE">
+                                <state key="normal" title="MY ACCOUNT">
                                     <color key="titleColor" red="0.9999268651008606" green="1" blue="0.9998735785484314" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="profile:" destination="Z3h-TX-yqK" eventType="touchUpInside" id="5wR-CM-H1K"/>
-                                    <segue destination="hN5-69-Fi8" kind="show" identifier="toProfile" id="MPB-CT-q09"/>
+                                    <action selector="profile:" destination="Z3h-TX-yqK" eventType="touchUpInside" id="GVm-EQ-ufS"/>
                                 </connections>
                             </button>
                             <view hidden="YES" tag="55" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bEU-sn-ewv">
@@ -599,7 +597,7 @@
                                         <color key="backgroundColor" red="0.0383522138" green="0.30846002700000003" blue="0.3923511207" alpha="0.59217144691780821" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" name="Marvel-Regular" family="Marvel" pointSize="30"/>
                                         <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="5"/>
-                                        <state key="normal" title="PROFILE">
+                                        <state key="normal" title="MY ACCOUNT">
                                             <color key="titleColor" red="0.99992686509999995" green="1" blue="0.99987357850000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -1273,97 +1271,145 @@
                         <viewControllerLayoutGuide type="bottom" id="qfz-8D-SJy"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="KFl-oz-x8p">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stephen-di-donato-119064.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="PoA-og-jbg">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="800"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kjx-ZE-6qW">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="800"/>
-                                <subviews>
-                                    <button verifyAmbiguity="ignoreSizes" opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="crI-G0-jkB">
-                                        <rect key="frame" x="108" y="723" width="158" height="29"/>
-                                        <color key="backgroundColor" red="0.0383522138" green="0.30846002700000003" blue="0.3923511207" alpha="0.50759845889999999" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="158" id="LIB-qx-Mnh"/>
-                                            <constraint firstAttribute="height" constant="29" id="Qlm-Nx-dc8"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="19"/>
-                                        <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="5"/>
-                                        <state key="normal" title="Delete Account">
-                                            <color key="titleColor" red="0.99992686509999995" green="1" blue="0.99987357850000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                    </button>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="4Cp-5W-lQg">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="450"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="450" id="Avc-N2-Jpd"/>
-                                        </constraints>
-                                    </imageView>
-                                    <textField opaque="NO" clipsSubviews="YES" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="bMj-7D-Txb">
-                                        <rect key="frame" x="50" y="615" width="275" height="30"/>
-                                        <color key="backgroundColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="sWA-gz-UVJ"/>
-                                        </constraints>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" name="Pompiere-Regular" family="Pompiere " pointSize="24"/>
-                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
-                                    </textField>
-                                    <button verifyAmbiguity="ignoreSizes" opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OhC-Tp-iZL">
-                                        <rect key="frame" x="105" y="653" width="165" height="30"/>
-                                        <color key="backgroundColor" red="0.0383522138" green="0.30846002700000003" blue="0.3923511207" alpha="0.50759845889999999" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="KS0-bA-uJY"/>
-                                            <constraint firstAttribute="width" constant="165" id="X4a-JJ-9gh"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="19"/>
-                                        <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="5"/>
-                                        <state key="normal" title="Change Password">
-                                            <color key="titleColor" red="0.99992686509999995" green="1" blue="0.99987357850000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                    </button>
-                                    <textField hidden="YES" opaque="NO" clipsSubviews="YES" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="4eI-uo-Vx1">
-                                        <rect key="frame" x="50" y="615" width="275" height="33"/>
-                                        <color key="backgroundColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="0.49585295376712329" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" name="Pompiere-Regular" family="Pompiere " pointSize="24"/>
-                                        <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
-                                    </textField>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="g9H-OS-IgB">
-                                        <rect key="frame" x="17" y="480" width="341" height="109"/>
-                                        <color key="backgroundColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="0.65863120720000001" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="109" id="MGJ-BH-OD6"/>
-                                        </constraints>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="Pompiere-Regular" family="Pompiere " pointSize="18"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.78354418020000005" green="0.78709176979999995" blue="0.8776806828" alpha="0.19157130280000001" colorSpace="custom" customColorSpace="sRGB"/>
+                            <textView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="g9H-OS-IgB">
+                                <rect key="frame" x="12.5" y="368.5" width="350" height="100"/>
+                                <color key="backgroundColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="0.65863120720000001" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstItem="4Cp-5W-lQg" firstAttribute="centerX" secondItem="g9H-OS-IgB" secondAttribute="centerX" id="DOP-n7-X46"/>
-                                    <constraint firstItem="4eI-uo-Vx1" firstAttribute="leading" secondItem="bMj-7D-Txb" secondAttribute="leading" id="FcC-fa-gEC"/>
-                                    <constraint firstItem="g9H-OS-IgB" firstAttribute="top" secondItem="4Cp-5W-lQg" secondAttribute="bottom" constant="30" id="InA-Pw-4CU"/>
-                                    <constraint firstItem="crI-G0-jkB" firstAttribute="top" secondItem="OhC-Tp-iZL" secondAttribute="bottom" constant="40" id="LRx-nT-4Cv"/>
-                                    <constraint firstItem="g9H-OS-IgB" firstAttribute="centerX" secondItem="bMj-7D-Txb" secondAttribute="centerX" id="PW1-ps-XCc"/>
-                                    <constraint firstItem="4Cp-5W-lQg" firstAttribute="top" secondItem="Kjx-ZE-6qW" secondAttribute="top" id="SB3-9o-jb6"/>
-                                    <constraint firstItem="4eI-uo-Vx1" firstAttribute="centerX" secondItem="OhC-Tp-iZL" secondAttribute="centerX" id="XSl-mU-lWo"/>
-                                    <constraint firstItem="bMj-7D-Txb" firstAttribute="top" secondItem="4eI-uo-Vx1" secondAttribute="top" id="ZBM-cP-DW6"/>
-                                    <constraint firstItem="bMj-7D-Txb" firstAttribute="top" secondItem="g9H-OS-IgB" secondAttribute="bottom" constant="26" id="bn0-ii-C1q"/>
-                                    <constraint firstItem="bMj-7D-Txb" firstAttribute="trailing" secondItem="4eI-uo-Vx1" secondAttribute="trailing" id="ent-fl-Iu5"/>
-                                    <constraint firstItem="bMj-7D-Txb" firstAttribute="leading" secondItem="Kjx-ZE-6qW" secondAttribute="leading" constant="50" id="gF9-mL-VIT"/>
-                                    <constraint firstItem="crI-G0-jkB" firstAttribute="centerX" secondItem="Kjx-ZE-6qW" secondAttribute="centerX" id="kZC-wE-QRK"/>
-                                    <constraint firstItem="OhC-Tp-iZL" firstAttribute="centerX" secondItem="crI-G0-jkB" secondAttribute="centerX" id="lxI-0z-vMU"/>
-                                    <constraint firstItem="OhC-Tp-iZL" firstAttribute="top" secondItem="bMj-7D-Txb" secondAttribute="bottom" constant="8" symbolic="YES" id="mTR-0C-Ehh"/>
-                                    <constraint firstAttribute="bottom" secondItem="crI-G0-jkB" secondAttribute="bottom" constant="48" id="pLH-8s-amc"/>
-                                    <constraint firstItem="g9H-OS-IgB" firstAttribute="leading" secondItem="Kjx-ZE-6qW" secondAttribute="leading" constant="17" id="rRy-XE-Sox"/>
-                                    <constraint firstItem="4Cp-5W-lQg" firstAttribute="leading" secondItem="Kjx-ZE-6qW" secondAttribute="leading" id="snZ-1I-qx1"/>
-                                    <constraint firstAttribute="trailing" secondItem="4Cp-5W-lQg" secondAttribute="trailing" id="xgw-3L-5Wh"/>
+                                    <constraint firstAttribute="height" constant="100" id="5RT-F8-J2m"/>
+                                    <constraint firstAttribute="width" constant="350" id="kPC-6K-hqc"/>
                                 </constraints>
-                            </scrollView>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" name="Pompiere-Regular" family="Pompiere " pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button verifyAmbiguity="ignoreSizes" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OhC-Tp-iZL">
+                                <rect key="frame" x="105" y="308.5" width="165" height="30"/>
+                                <color key="backgroundColor" red="0.26193490730000002" green="0.52117206299999996" blue="0.56353109140000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="KS0-bA-uJY"/>
+                                    <constraint firstAttribute="width" constant="165" id="X4a-JJ-9gh"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="19"/>
+                                <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="5"/>
+                                <state key="normal" title="Change Password">
+                                    <color key="titleColor" red="0.99992686509999995" green="1" blue="0.99987357850000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="changePassword:" destination="hN5-69-Fi8" eventType="touchUpInside" id="s8N-aJ-7L7"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="4eI-uo-Vx1">
+                                <rect key="frame" x="45.5" y="262" width="284" height="33"/>
+                                <color key="backgroundColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="0.49585295376712329" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="284" id="VCv-zn-gku"/>
+                                </constraints>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="Pompiere-Regular" family="Pompiere " pointSize="24"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="bMj-7D-Txb">
+                                <rect key="frame" x="45.5" y="228.5" width="284" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="284" id="4ZK-dw-iTS"/>
+                                    <constraint firstAttribute="height" constant="30" id="sWA-gz-UVJ"/>
+                                </constraints>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="Pompiere-Regular" family="Pompiere " pointSize="24"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                            </textField>
+                            <button verifyAmbiguity="ignoreSizes" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="crI-G0-jkB">
+                                <rect key="frame" x="108.5" y="579" width="158" height="29"/>
+                                <color key="backgroundColor" red="0.26193490730000002" green="0.52117206299999996" blue="0.56353109140000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="158" id="LIB-qx-Mnh"/>
+                                    <constraint firstAttribute="height" constant="29" id="Qlm-Nx-dc8"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="19"/>
+                                <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="5"/>
+                                <state key="normal" title="Delete Account">
+                                    <color key="titleColor" red="0.99992686509999995" green="1" blue="0.99987357850000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="deleteAccount:" destination="hN5-69-Fi8" eventType="touchUpInside" id="Cf8-F4-XkN"/>
+                                </connections>
+                            </button>
+                            <button verifyAmbiguity="ignoreSizes" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kgI-1p-nDT">
+                                <rect key="frame" x="108.5" y="479" width="158" height="29"/>
+                                <color key="backgroundColor" red="0.26193490730000002" green="0.52117206299999996" blue="0.56353109140000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="158" id="fN1-pD-39X"/>
+                                    <constraint firstAttribute="height" constant="29" id="rjg-S0-JE9"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="19"/>
+                                <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="5"/>
+                                <state key="normal" title="Edit Story">
+                                    <color key="titleColor" red="0.99992686509999995" green="1" blue="0.99987357850000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="editDetails:" destination="hN5-69-Fi8" eventType="touchUpInside" id="Gpq-aa-vmJ"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password updated!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UIZ-zg-QBV">
+                                <rect key="frame" x="16" y="189" width="343" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="343" id="n90-9S-viS"/>
+                                    <constraint firstAttribute="height" constant="29" id="vaG-TT-RjR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="18"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="noZ-4I-81F">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jane Doe" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bNS-Nd-XcS">
+                                <rect key="frame" x="16" y="489" width="343" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="29" id="Tw3-wD-sTX"/>
+                                    <constraint firstAttribute="width" constant="343" id="aeJ-Tv-AMg"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="19"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RN2-dE-dYS">
+                                <rect key="frame" x="202.5" y="91" width="120" height="25"/>
+                                <color key="backgroundColor" red="0.26193490726582364" green="0.52117206302976893" blue="0.56353109137055846" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="9aT-Yd-dDT"/>
+                                    <constraint firstAttribute="width" constant="120" id="LcY-s9-HxX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="19"/>
+                                <state key="normal" title="Camera">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="camera:" destination="hN5-69-Fi8" eventType="touchUpInside" id="fUs-gE-shJ"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yaw-ND-OgO">
+                                <rect key="frame" x="52.5" y="91" width="120" height="25"/>
+                                <color key="backgroundColor" red="0.26193490730000002" green="0.52117206299999996" blue="0.56353109140000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="7b8-jg-eQN"/>
+                                    <constraint firstAttribute="height" constant="25" id="Z6q-Qx-osF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="19"/>
+                                <state key="normal" title="Photo Library">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="photos:" destination="hN5-69-Fi8" eventType="touchUpInside" id="7ms-kZ-fGA"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="an1-Sx-Zkj">
                                 <rect key="frame" x="16" y="20" width="50" height="50"/>
                                 <constraints>
@@ -1373,36 +1419,6 @@
                                 <state key="normal" image="menu30"/>
                                 <connections>
                                     <action selector="home:" destination="hN5-69-Fi8" eventType="touchUpInside" id="5Ja-QC-kjQ"/>
-                                </connections>
-                            </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yaw-ND-OgO">
-                                <rect key="frame" x="47" y="86" width="132" height="33"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="132" id="7b8-jg-eQN"/>
-                                    <constraint firstAttribute="height" constant="33" id="Z6q-Qx-osF"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="22"/>
-                                <state key="normal" title="Photo Library">
-                                    <color key="titleColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="photos:" destination="hN5-69-Fi8" eventType="touchUpInside" id="7ms-kZ-fGA"/>
-                                </connections>
-                            </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RN2-dE-dYS">
-                                <rect key="frame" x="191" y="86" width="143" height="33"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="33" id="9aT-Yd-dDT"/>
-                                    <constraint firstAttribute="width" constant="143" id="LcY-s9-HxX"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="22"/>
-                                <state key="normal" title="Take a Picture">
-                                    <color key="titleColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="camera:" destination="hN5-69-Fi8" eventType="touchUpInside" id="fUs-gE-shJ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="53B-EM-Ga7">
@@ -1419,44 +1435,59 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="qfz-8D-SJy" firstAttribute="top" secondItem="PoA-og-jbg" secondAttribute="bottom" id="4tH-yd-mkD"/>
-                            <constraint firstAttribute="trailing" secondItem="PoA-og-jbg" secondAttribute="trailing" id="CIL-ic-fVw"/>
-                            <constraint firstItem="an1-Sx-Zkj" firstAttribute="top" secondItem="rK8-xc-lFK" secondAttribute="bottom" id="KFu-kG-pRa"/>
-                            <constraint firstItem="an1-Sx-Zkj" firstAttribute="leading" secondItem="KFl-oz-x8p" secondAttribute="leadingMargin" id="L58-ea-HWL"/>
-                            <constraint firstItem="yaw-ND-OgO" firstAttribute="baseline" secondItem="RN2-dE-dYS" secondAttribute="firstBaseline" id="M7c-yJ-wSd"/>
-                            <constraint firstItem="Kjx-ZE-6qW" firstAttribute="leading" secondItem="PoA-og-jbg" secondAttribute="leading" id="MXC-Lq-Yn9"/>
-                            <constraint firstItem="Kjx-ZE-6qW" firstAttribute="bottom" secondItem="qfz-8D-SJy" secondAttribute="top" id="Oec-Nl-trU"/>
-                            <constraint firstItem="Kjx-ZE-6qW" firstAttribute="top" secondItem="PoA-og-jbg" secondAttribute="top" id="PXp-4b-6E4"/>
-                            <constraint firstItem="Kjx-ZE-6qW" firstAttribute="trailing" secondItem="PoA-og-jbg" secondAttribute="trailing" id="TwN-Bf-t7b"/>
-                            <constraint firstItem="RN2-dE-dYS" firstAttribute="top" secondItem="53B-EM-Ga7" secondAttribute="bottom" constant="19" id="Txq-RT-0iW"/>
-                            <constraint firstItem="53B-EM-Ga7" firstAttribute="trailing" secondItem="KFl-oz-x8p" secondAttribute="trailingMargin" id="cTE-M5-Iyh"/>
-                            <constraint firstItem="RN2-dE-dYS" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" constant="75" id="etp-d5-LoB"/>
-                            <constraint firstItem="RN2-dE-dYS" firstAttribute="baseline" secondItem="yaw-ND-OgO" secondAttribute="firstBaseline" id="mrm-b4-Xi7"/>
-                            <constraint firstItem="PoA-og-jbg" firstAttribute="top" secondItem="KFl-oz-x8p" secondAttribute="top" id="oGd-dN-jTo"/>
-                            <constraint firstItem="PoA-og-jbg" firstAttribute="leading" secondItem="KFl-oz-x8p" secondAttribute="leading" id="scY-wd-RtU"/>
-                            <constraint firstItem="53B-EM-Ga7" firstAttribute="top" secondItem="rK8-xc-lFK" secondAttribute="bottom" constant="5" id="twI-S0-bzE"/>
-                            <constraint firstItem="yaw-ND-OgO" firstAttribute="top" secondItem="RN2-dE-dYS" secondAttribute="top" id="yAc-gn-JsW"/>
-                            <constraint firstItem="yaw-ND-OgO" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" constant="-75" id="zIt-kv-3QE"/>
+                            <constraint firstItem="PoA-og-jbg" firstAttribute="leading" secondItem="KFl-oz-x8p" secondAttribute="leading" id="04g-Hc-h6Y"/>
+                            <constraint firstItem="53B-EM-Ga7" firstAttribute="top" secondItem="rK8-xc-lFK" secondAttribute="bottom" constant="5" id="1Sn-la-ptb"/>
+                            <constraint firstItem="4eI-uo-Vx1" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="-55" id="5oI-j5-UJc"/>
+                            <constraint firstItem="crI-G0-jkB" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" id="6wM-nL-rEI"/>
+                            <constraint firstItem="an1-Sx-Zkj" firstAttribute="top" secondItem="rK8-xc-lFK" secondAttribute="bottom" id="7d1-p6-jpG"/>
+                            <constraint firstItem="g9H-OS-IgB" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="85" id="7jC-hv-YWn"/>
+                            <constraint firstItem="crI-G0-jkB" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="260" id="8SS-ff-g7K"/>
+                            <constraint firstAttribute="trailing" secondItem="noZ-4I-81F" secondAttribute="trailing" id="9O2-a5-q9z"/>
+                            <constraint firstItem="qfz-8D-SJy" firstAttribute="top" secondItem="noZ-4I-81F" secondAttribute="bottom" id="BGF-He-hPB"/>
+                            <constraint firstItem="yaw-ND-OgO" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" constant="-75" id="EOq-V2-SO1"/>
+                            <constraint firstItem="4eI-uo-Vx1" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" id="ErP-7d-1la"/>
+                            <constraint firstItem="yaw-ND-OgO" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="-230" id="L0c-V7-ZLN"/>
+                            <constraint firstItem="UIZ-zg-QBV" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="-130" id="LJl-AJ-qoz"/>
+                            <constraint firstItem="noZ-4I-81F" firstAttribute="top" secondItem="KFl-oz-x8p" secondAttribute="top" id="MZT-vw-Bap"/>
+                            <constraint firstItem="RN2-dE-dYS" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="-230" id="Mgb-Xr-9X3"/>
+                            <constraint firstItem="noZ-4I-81F" firstAttribute="leading" secondItem="KFl-oz-x8p" secondAttribute="leading" id="Niq-Ah-5kb"/>
+                            <constraint firstItem="bNS-Nd-XcS" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="170" id="NlF-VJ-E4C"/>
+                            <constraint firstItem="an1-Sx-Zkj" firstAttribute="leading" secondItem="KFl-oz-x8p" secondAttribute="leadingMargin" id="Ns6-3f-u4E"/>
+                            <constraint firstItem="bMj-7D-Txb" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="-90" id="Tyb-lY-9MB"/>
+                            <constraint firstItem="UIZ-zg-QBV" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" id="Uee-fO-oWw"/>
+                            <constraint firstItem="OhC-Tp-iZL" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" id="XqH-KW-f8c"/>
+                            <constraint firstItem="kgI-1p-nDT" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" id="bO7-xc-XV0"/>
+                            <constraint firstItem="RN2-dE-dYS" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" constant="75" id="bhv-99-Pir"/>
+                            <constraint firstItem="bNS-Nd-XcS" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" id="d1N-1G-ky9"/>
+                            <constraint firstItem="OhC-Tp-iZL" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="-10" id="ePv-W3-l3a"/>
+                            <constraint firstItem="kgI-1p-nDT" firstAttribute="centerY" secondItem="KFl-oz-x8p" secondAttribute="centerY" constant="160" id="fQn-UM-YeW"/>
+                            <constraint firstItem="qfz-8D-SJy" firstAttribute="top" secondItem="PoA-og-jbg" secondAttribute="bottom" id="g2q-Cz-M5o"/>
+                            <constraint firstItem="g9H-OS-IgB" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" id="gHF-H8-xAn"/>
+                            <constraint firstItem="53B-EM-Ga7" firstAttribute="trailing" secondItem="KFl-oz-x8p" secondAttribute="trailingMargin" id="kdP-hg-TFw"/>
+                            <constraint firstItem="PoA-og-jbg" firstAttribute="top" secondItem="KFl-oz-x8p" secondAttribute="top" id="s9b-0j-Ko9"/>
+                            <constraint firstAttribute="trailing" secondItem="PoA-og-jbg" secondAttribute="trailing" id="soH-Jb-GQ9"/>
+                            <constraint firstItem="bMj-7D-Txb" firstAttribute="centerX" secondItem="KFl-oz-x8p" secondAttribute="centerX" id="yaQ-y9-ag2"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="800"/>
                     <connections>
                         <outlet property="camButton" destination="RN2-dE-dYS" id="Cfr-2O-gTo"/>
                         <outlet property="changeButton" destination="OhC-Tp-iZL" id="DjU-2n-ua2"/>
                         <outlet property="confirmPassword" destination="4eI-uo-Vx1" id="Bfe-Qy-qH8"/>
                         <outlet property="deleteButton" destination="crI-G0-jkB" id="4yX-wX-cb9"/>
+                        <outlet property="editDetailsButton" destination="kgI-1p-nDT" id="prL-pQ-QNf"/>
                         <outlet property="libButton" destination="yaw-ND-OgO" id="MQu-SB-Tyt"/>
                         <outlet property="password" destination="bMj-7D-Txb" id="6hV-fx-5AE"/>
+                        <outlet property="passwordUpdatedLabel" destination="UIZ-zg-QBV" id="6us-eQ-d4z"/>
                         <outlet property="photoButton" destination="53B-EM-Ga7" id="N5n-i6-6Fy"/>
-                        <outlet property="scrollView" destination="Kjx-ZE-6qW" id="VKR-dR-pLu"/>
                         <outlet property="userDetails" destination="g9H-OS-IgB" id="XBp-Gu-Uyd"/>
-                        <outlet property="userImage" destination="4Cp-5W-lQg" id="bE8-qC-TrA"/>
+                        <outlet property="userImage" destination="noZ-4I-81F" id="pyD-LV-MTS"/>
+                        <outlet property="userNameField" destination="bNS-Nd-XcS" id="z9M-sV-FoT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RTE-Pf-pWu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1962.4000000000001" y="267.16641679160421"/>
+            <point key="canvasLocation" x="-1962.4000000000001" y="266.71664167916043"/>
         </scene>
         <!--ListingsViewController-->
         <scene sceneID="l8O-s7-obk">
@@ -1473,20 +1504,20 @@
                             <imageView clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stephen-di-donato-119064.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="mp3-fq-38w">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="grouped" rowHeight="126" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="20d-M0-5R4">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="grouped" rowHeight="144" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="20d-M0-5R4">
                                 <rect key="frame" x="0.0" y="94" width="375" height="524"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postedCell" rowHeight="132" id="5oA-ak-ynU" customClass="PostedTableViewCell" customModule="ParseStarterProject" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="132"/>
+                                    <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postedCell" rowHeight="144" id="5oA-ak-ynU" customClass="PostedTableViewCell" customModule="ParseStarterProject" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="144"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" contentMode="center" tableViewCell="5oA-ak-ynU" id="h8H-hS-HbI">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="131.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="143.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Downton Abbey Place" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="17" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o6S-Zr-aAP">
-                                                    <rect key="frame" x="15" y="16" width="198.5" height="45"/>
+                                                    <rect key="frame" x="15" y="12" width="198.5" height="45"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.43529412150000002" green="0.4431372583" blue="0.47450980539999998" alpha="0.45566673801369861" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="27"/>
@@ -1494,15 +1525,15 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="$1500 MONTHLY" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G5k-S5-5W7">
-                                                    <rect key="frame" x="17" y="66" width="111.5" height="30"/>
+                                                    <rect key="frame" x="17" y="55" width="111.5" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.43529412150000002" green="0.4431372583" blue="0.47450980539999998" alpha="0.67516588184931503" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" name="Marvel-Regular" family="Marvel" pointSize="20"/>
                                                     <color key="textColor" red="0.082299418750000006" green="0.73514205219999995" blue="0.8222592473" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 INTERESTED!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fgN-wr-tiX">
-                                                    <rect key="frame" x="221" y="82" width="127" height="33"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="2 INTERESTED!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fgN-wr-tiX">
+                                                    <rect key="frame" x="221" y="42" width="127" height="33"/>
                                                     <color key="backgroundColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="0.54623287671232879" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="33" id="VpS-31-l0g"/>
@@ -1513,10 +1544,10 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9kl-er-Z0m">
-                                                    <rect key="frame" x="266" y="52" width="108" height="80"/>
+                                                    <rect key="frame" x="266" y="91" width="108" height="36"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.86119249131944442" green="0.097086588541666671" blue="0.0" alpha="0.74906357020547942" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <fontDescription key="fontDescription" name="PatrickHand-Regular" family="Patrick Hand" pointSize="28"/>
+                                                    <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="28"/>
                                                     <state key="normal" title="DELETE">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
@@ -1525,10 +1556,10 @@
                                                     </connections>
                                                 </button>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="afT-lw-te9">
-                                                    <rect key="frame" x="159" y="53" width="108" height="79"/>
+                                                    <rect key="frame" x="157" y="91" width="108" height="36"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="0.77209974319999997" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <fontDescription key="fontDescription" name="PatrickHand-Regular" family="Patrick Hand" pointSize="28"/>
+                                                    <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="28"/>
                                                     <state key="normal" title="EDIT">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
@@ -1537,10 +1568,10 @@
                                                     </connections>
                                                 </button>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ww3-gl-9Rf">
-                                                    <rect key="frame" x="53" y="53" width="108" height="80"/>
+                                                    <rect key="frame" x="47" y="91" width="108" height="37"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.066510404079736948" green="0.65285414930697749" blue="0.73574317893401009" alpha="0.77961793664383561" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <fontDescription key="fontDescription" name="PatrickHand-Regular" family="Patrick Hand" pointSize="28"/>
+                                                    <fontDescription key="fontDescription" name="Marvel-Bold" family="Marvel" pointSize="28"/>
                                                     <state key="normal" title="LIKED">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
@@ -2174,7 +2205,7 @@
         <image name="timothy-ries-195496.jpg" width="2832" height="4256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="dgk-2f-LOf"/>
+        <segue reference="pSl-Ca-i1H"/>
         <segue reference="Ls4-5m-xzC"/>
     </inferredMetricsTieBreakers>
 </document>

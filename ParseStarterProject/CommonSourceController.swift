@@ -108,11 +108,14 @@ class CommonSourceController: UIViewController {
         // add alert action
         for option in options {
             alert.addAction(UIAlertAction(title: option.key, style: .default, handler: { (action) in
-                if (option.value == "") {
+                if option.key == "Cancel" {
+                    alert.dismiss(animated: true, completion: nil)
                     return;
                 }
-                let selector = NSSelectorFromString(option.value)
-                self.perform(selector)
+                if option.value != "" {
+                    let action = NSSelectorFromString(option.value)
+                    self.perform(action)
+                }
                 alert.dismiss(animated: true, completion: nil)
             }))
         }
@@ -134,6 +137,9 @@ class CommonSourceController: UIViewController {
     @IBAction func profileBar(_ sender: Any) {
         self.dismiss(animated: false, completion: nil)
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+        let user = getUser()
+        vc.subjectUser = user
+        vc.objectUser = user
         presentingViewController?.present(vc, animated: true, completion: nil)
     }
     

@@ -233,7 +233,6 @@ class SearchViewController: CommonSourceController {
 		switch i {
 			case 0:
 				// if index modulus is 0, searchImage1 is at p0 (12oclock) pre-swipe, searchImage2 is at p1 post-left-swipe, searchImage1 stays put at p0 post-right-swipe
-				print("case0")
 				if (swipe == .left) {
 					shiftCardsLeft(i1: searchImage1, i2: searchImage2, i3: searchImage3)
 				} else if (swipe == .right) {
@@ -241,14 +240,12 @@ class SearchViewController: CommonSourceController {
 				}
 			case 1:
 				// if index modulus is 1, searchImage2 is at p0 (12oclock) pre-swipe, searchImage3 is at p1 post-left-swipe, searchImage1 is at p0 post-right-swipe
-				print("case1")
 				if (swipe == .left) {
 					shiftCardsLeft(i1: searchImage2, i2: searchImage3, i3: searchImage1)
 				} else if (swipe == .right) {
 					shiftCardsRight(i1: searchImage2, i2: searchImage3, i3: searchImage1)
 				}
 			case 2:
-				print("case2")
 				if (swipe == .left) {
 					shiftCardsLeft(i1: searchImage3, i2: searchImage1, i3: searchImage2)
 				} else if (swipe == .right) {
@@ -366,8 +363,6 @@ class SearchViewController: CommonSourceController {
 			switch swipe.direction {
 				case UISwipeGestureRecognizerDirection.right:
 					animateCards(gestureRecognizer: .right)
-					print("Recognized right")
-					print(index)
 				case UISwipeGestureRecognizerDirection.left:
 					// on left swipe, if index is at max, don't proceed with animations
 					if index == listings.count - 1 {
@@ -376,8 +371,6 @@ class SearchViewController: CommonSourceController {
 						break
 					}
 					animateCards(gestureRecognizer: .left)
-					print("Recognized left")
-					print(index)
 				default:
 					break
 			}

@@ -43,8 +43,12 @@ class HomeViewController: CommonSourceController {
         performSegue(withIdentifier: "toCreate", sender: self)
     }
     
-    @IBAction func profile(_ sender: UIButton) {
-        performSegue(withIdentifier: "toProfile", sender: self)
+    @IBAction func profile(_ sender: Any) {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+        let user = super.getUser()
+        vc.objectUser = user
+        vc.subjectUser = user
+        self.present(vc, animated: true, completion: nil)
     }
     
     @IBAction func listings(_ sender: UIButton) {
