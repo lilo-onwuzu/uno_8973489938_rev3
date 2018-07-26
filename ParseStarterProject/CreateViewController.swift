@@ -77,7 +77,8 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
     func hideAll() {
         let subviews = self.view.subviews
         for view in subviews {
-            if (view.tag != 5) {
+            // hide all but back image with tag 57 and home button with tag 5
+            if (view.tag == 0) {
                 view.isHidden = true
             }
         }
@@ -347,9 +348,10 @@ class CreateViewController: CommonSourceController, UITextFieldDelegate, UIPicke
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-    // tap anywhere to escape keyboard
+    // tap anywhere to escape keyboard and/or menu
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+        super.hideMenu(mainView: self.view)
     }
     
     // hit return to escape keyboard

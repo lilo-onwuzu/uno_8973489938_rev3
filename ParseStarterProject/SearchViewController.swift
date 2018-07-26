@@ -433,6 +433,12 @@ class SearchViewController: CommonSourceController {
 		}
 	}
 	
+	// tap anywhere to escape keyboard and/or menu
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		self.view.endEditing(true)
+		super.hideMenu(mainView: self.view)
+	}
+	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "toSearchDetail" {
 			let vc = segue.destination as! SearchDetailViewController

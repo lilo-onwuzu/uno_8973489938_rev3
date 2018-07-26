@@ -10,12 +10,12 @@ import UIKit
 
 class PostedViewController: CommonSourceController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var tableView: UITableView!
-    
     var postedListings = [PFObject]()
     var refresher: UIRefreshControl!
-//    var activityIndicator = UIActivityIndicatorView()
     var wasSelected: PostedTableViewCell!
+    
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyLabel: UILabel!
     
     @objc func refresh() {
         self.tableView.reloadData()
@@ -36,7 +36,8 @@ class PostedViewController: CommonSourceController, UITableViewDelegate, UITable
                     // reload data after async query
                     self.tableView.reloadData()
                 } else {
-                    // TO DO : handle no listings
+                    self.emptyLabel.isHidden = false
+                    self.tableView.isHidden = true
                 }
             }
         }
@@ -59,6 +60,18 @@ class PostedViewController: CommonSourceController, UITableViewDelegate, UITable
         self.present(alert, animated: true, completion: nil)
     }
     
+    func hideOtherButtons(cellAnimating: PostedTableViewCell) {
+        var cellCount = tableView.numberOfRows(inSection: 0)
+        while cellCount >=  0 {
+            let indexPath = IndexPath(row: cellCount, section: 0)
+            let cell = tableView.cellForRow(at: indexPath) as? PostedTableViewCell
+            if cellAnimating != cell {
+                cell?.hideButtons()
+            }
+            cellCount -= 1
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -68,11 +81,14 @@ class PostedViewController: CommonSourceController, UITableViewDelegate, UITable
         refresher.addTarget(self, action: #selector(PostedViewController.refresh), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(refresher)
         getPostedListings()
+        emptyLabel.layer.masksToBounds = true
+        emptyLabel.layer.cornerRadius = 10
     }
     
     override func viewDidAppear(_ animated: Bool) {
         // reload tableView to remove gesture recognizers
         tableView.reloadData()
+        super.hideMenu(mainView: self.view)
     }
     
     @IBAction func home(_ sender: Any) {
@@ -108,12 +124,11 @@ class PostedViewController: CommonSourceController, UITableViewDelegate, UITable
         cell.myTableView = tableView
         cell.viewController = self
         cell.postedListing = listing
-        cell.postedListings = postedListings
         return cell
     }
 
-    //  touch anywhere to hide menuView. showMenu prevents the need for a double tap before menuView can be displayed again
+    //  touch anywhere to hide menuView and/or menu
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.showMenu(mainView: self.view)
+        super.hideMenu(mainView: self.view)
     }
 }

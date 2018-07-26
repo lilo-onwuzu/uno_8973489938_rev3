@@ -15,7 +15,6 @@ class PostedTableViewCell: UITableViewCell {
     var viewController: PostedViewController!
     var postedListing = PFObject(className: "Listing")
     var listingImages = [PFFile]()
-    var postedListings = [PFObject]()
     
     @IBOutlet weak var postedTitle: UILabel!
     @IBOutlet weak var postedRate: UILabel!
@@ -24,11 +23,18 @@ class PostedTableViewCell: UITableViewCell {
     @IBOutlet weak var editButton: UIButton!
     @IBOutlet weak var likedButton: UIButton!
     
+    func hideButtons() {
+        editButton.isHidden = true
+        deleteButton.isHidden = true
+        likedButton.isHidden = true
+    }
+    
     @objc func swiped(gestureRecognizer: UISwipeGestureRecognizer) {
         let swipe = gestureRecognizer
         if swipe.state == .ended {
             switch swipe.direction {
                 case UISwipeGestureRecognizerDirection.left:
+                    viewController.hideOtherButtons(cellAnimating: self)
                     editButton.isHidden = false
                     deleteButton.isHidden = false
                     likedButton.isHidden = false
@@ -41,9 +47,7 @@ class PostedTableViewCell: UITableViewCell {
                         })
                     })
                 case UISwipeGestureRecognizerDirection.right:
-                    editButton.isHidden = true
-                    deleteButton.isHidden = true
-                    likedButton.isHidden = true
+                    hideButtons()
                 default:
                     return
             }

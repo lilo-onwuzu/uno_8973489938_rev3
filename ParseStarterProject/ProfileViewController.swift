@@ -14,6 +14,7 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
     @IBOutlet weak var photoButton: UIButton!
     @IBOutlet weak var libButton: UIButton!
     @IBOutlet weak var camButton: UIButton!
+    @IBOutlet weak var homeButton: UIButton!
     @IBOutlet weak var userDetails: UITextView!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var confirmPassword: UITextField!
@@ -31,6 +32,8 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
     var objectUser: PFUser!
     var user: PFUser!
     var userId = ""
+    var activityIndicator = UIActivityIndicatorView()
+    var editMode = false
     
     func runEdit() {
 //        let editStory = self.editStory.text!
@@ -47,6 +50,14 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
 //                self.userStory.sizeToFit()
 //            }
 //        })
+    }
+    
+    func setHomeButton() {
+        if (!editMode) {
+            homeButton.setTitle("<", for: .normal)
+            homeButton.setImage(nil, for: .normal)
+            homeButton.setTitleColor(#colorLiteral(red: 0.07987072319, green: 0.733002007, blue: 0.8219559789, alpha: 1), for: .normal)
+        }
     }
     
     func showPhotoBar() {
@@ -75,11 +86,11 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
         let swipe = gestureRecognizer
         switch swipe.direction {
             case UISwipeGestureRecognizerDirection.up:
-                if objectUser == subjectUser {
+                if objectUser.isEqual(subjectUser) && editMode {
                     removeImageMode()
                 }
             case UISwipeGestureRecognizerDirection.down:
-                if objectUser == subjectUser {
+                if objectUser.isEqual(subjectUser) && editMode{
                     displayImageMode()
                 }
             default:
@@ -120,88 +131,66 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
             if success {
                 PFUser.logOut()
                 self.performSegue(withIdentifier: "toHome", sender: self)
-                
             }
         })
+        super.restore(activityIndicator: activityIndicator)
     }
     
     func deleteAsAccepted () {
-        // then delete user as selectedUser for all jobs
-        let queryReceivedJobs = PFQuery(className: "Job")
-        queryReceivedJobs.whereKey("userAccepted", contains: userId)
-        queryReceivedJobs.findObjectsInBackground { (objects, error) in
-            if let objects = objects {
-                if objects.count > 0 {
-                    for object in objects {
-                        var userAccepted = object.object(forKey: "userAccepted") as! [String]
-                        // remove userId from every jobs array of acceptedUsers
+        // remove userId from every listing's array of acceptedUsers
+        let queryAccepted = PFQuery(className: "Listing")
+        queryAccepted.whereKey("userAccepted", contains: userId)
+        queryAccepted.findObjectsInBackground { (listings, error) in
+            if let listings = listings {
+                if listings.count > 0 {
+                    for listing in listings {
+                        var userAccepted = listing.object(forKey: "userAccepted") as! [String]
                         for id in userAccepted {
                             if id == self.userId {
                                 userAccepted.remove(at: userAccepted.index(of: id)!)
-                                object.setValue(userAccepted, forKey: "userAccepted")
-                                object.saveInBackground(block: { (success, error) in
-                                    if success {
-                                        self.finallyDeleteUser()
-                                    }
-                                })
+                                listing.setValue(userAccepted, forKey: "userAccepted")
+                                listing.saveInBackground()
                             }
                         }
                     }
-                } else {
-                    // go to next step even if there are no objects
-                    self.finallyDeleteUser()
                 }
             }
         }
+        finallyDeleteUser()
     }
     
     func deleteAsSelected () {
         // then delete user as selectedUser for all jobs
-        let queryReceivedJobs = PFQuery(className: "Job")
-        queryReceivedJobs.whereKey("selectedUser", equalTo: userId)
-        queryReceivedJobs.findObjectsInBackground { (objects, error) in
-            if let objects = objects {
-                if objects.count > 0 {
-                    for object in objects {
+        let querySelected = PFQuery(className: "Listing")
+        querySelected.whereKey("selectedUser", equalTo: userId)
+        querySelected.findObjectsInBackground { (listings, error) in
+            if let listings = listings {
+                if listings.count > 0 {
+                    for listing in listings {
                         // empty selected user
-                        object.setValue("", forKey: "selectedUser")
-                        // empty messages too since messages only initiates with handshake agreement
-                        // this job will no longer be listed in message vc until another match is made
-                        object.remove(forKey: "messages")
-                        object.saveInBackground(block: { (success, error) in
-                            if success {
-                                self.deleteAsAccepted()
-                            }
-                        })
+                        listing.setValue("", forKey: "selectedUser")
+                        listing.saveInBackground()
                     }
-                } else {
-                    // go to next step even if there are no objects
-                    self.deleteAsAccepted()
                 }
             }
         }
+        deleteAsAccepted()
     }
     
     func deleteUser() {
         // first delete all user's posted jobs
-        let queryPostedJobs = PFQuery(className: "Job")
-        queryPostedJobs.whereKey("requesterId", equalTo: userId)
-        queryPostedJobs.findObjectsInBackground { (objects, error) in
-            if let objects = objects {
-                if objects.count > 0 {
-                    for object in objects {
-                        object.deleteInBackground(block: { (success, error) in
-                            if success {
-                                self.deleteAsSelected()
-                            }
-                        })
+        let queryPosted = PFQuery(className: "Listing")
+        queryPosted.whereKey("requesterId", equalTo: userId)
+        queryPosted.findObjectsInBackground { (listings, error) in
+            if let listings = listings {
+                if listings.count > 0 {
+                    for listing in listings {
+                        listing.deleteInBackground()
                     }
-                } else {
-                    // go to next step even if there are no objects
-                    self.deleteAsSelected()
                 }
             }
         }
+        deleteAsSelected()
     }
     
     override func viewDidLoad() {
@@ -223,11 +212,15 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
         camButton.layer.masksToBounds = true
         camButton.layer.cornerRadius = 10
         displayImageMode()
-        if objectUser.isEqual(subjectUser) {
+        if objectUser.isEqual(subjectUser) && !editMode {
             user = subjectUser
+            editMode = true
         } else {
             user = objectUser
+            editMode = false
+            setHomeButton()
         }
+        userId = user.objectId!
         let firstName = user.object(forKey: "first_name") as! String
         let lastName = user.object(forKey: "last_name") as! String
         userNameField.text = firstName + " " + lastName
@@ -300,10 +293,15 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
     }
     
     @IBAction func deleteAccount(_ sender: Any) {
-        
+        activityIndicator = super.showActivity()
+        deleteUser()
     }
     
     @IBAction func home(_ sender: Any) {
+        if (!editMode) {
+            dismiss(animated: true, completion: nil)
+            return
+        }
         super.showMenu(mainView: self.view)
     }
     
@@ -320,7 +318,6 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
     
     // protocol for custom module ImagePickerDelegate (library only)
     func wrapperDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
-        print("OH YEA WRAPPER DID")
     }
     
     // protocol for custom module ImagePickerDelegate (library only)
@@ -339,9 +336,10 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
         self.dismiss(animated: true, completion: nil)
     }
 
-    // tap anywhere to escape keyboard. showMenu prevents the need for a double tap before menuView can be displayed again
+    // tap anywhere to escape keyboard and/or menu
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+        super.hideMenu(mainView: self.view)
     }
     
     // hit return to escape keyboard

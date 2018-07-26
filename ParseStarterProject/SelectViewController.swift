@@ -11,6 +11,7 @@ import UIKit
 class SelectViewController: CommonSourceController , UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyLabel: UILabel!
     
     var selectedListing = PFObject(className: "Listing")
     var usersAccepted = [String]()
@@ -24,20 +25,29 @@ class SelectViewController: CommonSourceController , UITableViewDelegate, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
         usersAccepted = selectedListing.object(forKey: "userAccepted") as! [String]
-        //      TO DO : handle when no users have accepted
         refresher = UIRefreshControl()
         refresher.attributedTitle = NSAttributedString(string: "Refreshing...")
         refresher.addTarget(self, action: #selector(PostedViewController.refresh), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(refresher)
+        if usersAccepted.count == 0 {
+            emptyLabel.isHidden = false
+            tableView.isHidden = true
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         // reload tableView to remove gesture recognizers
         tableView.reloadData()
+        super.hideMenu(mainView: self.view)
     }
     
     @IBAction func back(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    //  touch anywhere to hide menuView and/or menu
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.hideMenu(mainView: self.view)
     }
     
     // UITableView Delegate method operates on my UITableView subclass "tableView"
@@ -71,6 +81,15 @@ class SelectViewController: CommonSourceController , UITableViewDelegate, UITabl
                         }
                     }
                 }
+                let userSelected = self.selectedListing.object(forKey: "userSelected") as? [String] ?? []
+                if userSelected.count > 0 {
+                    for selected in userSelected {
+                        if self.usersAccepted[indexPath.row] == selected {
+                            cell.notifyLabel.text = "YOU PICKED " + firstName.uppercased() + "!"
+                            cell.notifyLabel.isHidden = false
+                        }
+                    }
+                }
             } else {
                 // TO DO : handle error getting user
             }
@@ -78,6 +97,7 @@ class SelectViewController: CommonSourceController , UITableViewDelegate, UITabl
         cell.myTableView = tableView
         cell.viewController = self
         cell.selectedListing = self.selectedListing
+        cell.emptyLabel = emptyLabel
         return cell
     }
 }

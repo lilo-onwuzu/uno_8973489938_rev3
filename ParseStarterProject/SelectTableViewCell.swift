@@ -15,6 +15,8 @@ class SelectTableViewCell: UITableViewCell {
     var ready = false
     var viewController: SelectViewController!
     var userAccepted: PFUser!
+    var emptyLabel = UILabel()
+    var userSelected = Set<String>()
     
     @IBOutlet weak var userNameField: UILabel!
     @IBOutlet weak var userImage: UIImageView!
@@ -43,7 +45,7 @@ class SelectTableViewCell: UITableViewCell {
         // Initialization code
         super.awakeFromNib()
         userImage.layer.masksToBounds = true
-        userImage.layer.cornerRadius = 45
+        userImage.layer.cornerRadius = 65
         selectUserButton.layer.masksToBounds = true
         selectUserButton.layer.cornerRadius = 15
         userNameField.layer.masksToBounds = true
@@ -59,15 +61,33 @@ class SelectTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selected {
-//            if self.isEqual(viewController.wasSelected) {
-                viewUserProfile()
-//            }
+            viewUserProfile()
             self.userNameField.textColor = UIColor.white
-//            viewController.wasSelected = self
         } else {
             self.userNameField.textColor = #colorLiteral(red: 0.07987072319, green: 0.733002007, blue: 0.8219559789, alpha: 1)
             selectUserButton.isHidden = true
         }
     }
-
+    
+    @IBAction func selectUser(_ sender: Any) {
+        var selected = selectedListing.object(forKey: "userSelected") as? [String] ?? []
+        userSelected = NSSet(array: selected) as! Set<String>
+        let maxCount = selectedListing.object(forKey: "objectCount") as! Int
+        let count = userSelected.count
+        let selectUser = userAccepted.objectId!
+        if count < maxCount {
+            if !userSelected.contains(selectUser) {
+                userSelected.insert(selectUser)
+                selected = Array(userSelected)
+                selectedListing["userSelected"] = selected
+                selectedListing.saveInBackground()
+                notifyLabel.isHidden = false
+            } else {
+                emptyLabel.text = "YOU HAVE ALREADY SELECTED THIS PERSON"
+            }
+        } else {
+            emptyLabel.text = "YOU HAVE SELECTED THE MAXIMUM AMOUNT OF PERSONS FOR THIS LISTING"
+        }
+    }
+    
 }

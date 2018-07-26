@@ -12,6 +12,9 @@ class CommonSourceController: UIViewController {
     
     var commonUser = PFUser()
     
+    var sideBar: UIView!
+    var state = true
+
     private func setUser(){
         let user = PFUser.current()
         if user?.email == nil || !(user?.isAuthenticated)! {
@@ -58,38 +61,64 @@ class CommonSourceController: UIViewController {
         self.addChildViewController(vc)
         vc.didMove(toParentViewController: self)
         let sideView = vc.view.viewWithTag(55)!
-        let width = self.view.bounds.width
         let height = self.view.bounds.height
-        let rect = CGRect(x: 0, y: 0, width: 0.45*width, height: height)
+        let rect = CGRect(x: 0, y: 0, width: 187, height: height)
         sideView.frame = rect
         sideView.isUserInteractionEnabled = true
         mainView.addSubview(sideView)
         sideView.isHidden = false
+        sideBar = sideView
+        sideBar.restorationIdentifier = "sideBar"
     }
     
     func moveRight(mainView: UIView) {
         let subviews = mainView.subviews
+        print(subviews.count)
         for subview in subviews {
-            // move all subviews to the right except main view
-            if (subview.tag == 0) {
+            // move all subviews to the right except sideBar with tag 55
+            if (subview.tag != 55) {
                 UIView.transition(with: subview,
                                   duration: 0,
                                   options: .transitionCrossDissolve,
                                   animations: {
-                                    subview.center.x += 0.45*mainView.bounds.width
+                                    subview.center.x += 187
+                                    mainView.layoutIfNeeded()
+                }, completion: nil)
+            }
+        }
+    }
+    
+    func moveLeft(mainView: UIView) {
+        let subviews = mainView.subviews
+        for subview in subviews {
+            // move all subviews to the left except back image with tag 57
+            if (subview.tag != 57) {
+                UIView.transition(with: subview,
+                                  duration: 0,
+                                  options: .beginFromCurrentState,
+                                  animations: {
+                                    subview.center.x -= 187
+                                    mainView.layoutIfNeeded()
                 }, completion: nil)
             }
         }
     }
     
     func showMenu(mainView: UIView) {
-        if let viewWithTag = mainView.viewWithTag(55) {
-            viewWithTag.removeFromSuperview()
+        if state {
+            getMenu(mainView: mainView)
+            moveRight(mainView: mainView)
+            state = false
         } else {
-            self.getMenu(mainView: mainView)
-            DispatchQueue.main.async {
-                self.moveRight(mainView: mainView)
-            }
+            hideMenu(mainView: mainView)
+            state = true
+        }
+    }
+    
+    func hideMenu(mainView: UIView) {
+        if sideBar != nil && !sideBar.isHidden {
+            sideBar.isHidden = true
+            moveLeft(mainView: mainView)
         }
     }
     
@@ -184,6 +213,5 @@ class CommonSourceController: UIViewController {
             }
         })
     }
-
 }
 

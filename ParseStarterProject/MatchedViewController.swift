@@ -25,7 +25,6 @@ class MatchedViewController: CommonSourceController, UITableViewDelegate, UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         tableView.delegate = self
         tableView.dataSource = self
         // query job class for list of jobs with userid as selectedUser
@@ -52,9 +51,9 @@ class MatchedViewController: CommonSourceController, UITableViewDelegate, UITabl
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        //        tableView.reloadData()
-        //        removeMenu()
-    }
+        // reload tableView to remove gesture recognizers
+        tableView.reloadData()
+        super.hideMenu(mainView: self.view)    }
     
     @IBAction func home(_ sender: Any) {
         super.showMenu(mainView: self.view)
@@ -114,9 +113,9 @@ class MatchedViewController: CommonSourceController, UITableViewDelegate, UITabl
         
     }
     
+    //  touch anywhere to hide menuView and/or menu
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //        removeMenu()
-        
+        super.hideMenu(mainView: self.view)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
