@@ -83,6 +83,7 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
     }
     
     @objc func swiped(gestureRecognizer: UISwipeGestureRecognizer) {
+        self.view.endEditing(true)
         let swipe = gestureRecognizer
         switch swipe.direction {
             case UISwipeGestureRecognizerDirection.up:
@@ -90,7 +91,7 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
                     removeImageMode()
                 }
             case UISwipeGestureRecognizerDirection.down:
-                if objectUser.isEqual(subjectUser) && editMode{
+                if objectUser.isEqual(subjectUser) && editMode {
                     displayImageMode()
                 }
             default:
@@ -101,11 +102,23 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
     func displayImageMode() {
         userImage.isHidden = false
         userNameField.isHidden = false
+        userDetails.isHidden = true
+        password.isHidden = true
+        confirmPassword.isHidden = true
+        changeButton.isHidden = true
+        deleteButton.isHidden = true
+        editDetailsButton.isHidden = true
     }
 
     func removeImageMode() {
         userImage.isHidden = true
         userNameField.isHidden = true
+        userDetails.isHidden = false
+        password.isHidden = false
+        confirmPassword.isHidden = false
+        changeButton.isHidden = false
+        deleteButton.isHidden = false
+        editDetailsButton.isHidden = false
     }
     
     @objc func savePassword() {
@@ -247,6 +260,10 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.hideMenu(mainView: self.view)
+    }
+    
     @IBAction func changePhoto(_ sender: Any) {
         showPhotoBar()
     }
@@ -338,7 +355,6 @@ class ProfileViewController: CommonSourceController, UITextFieldDelegate, UIText
 
     // tap anywhere to escape keyboard and/or menu
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
         super.hideMenu(mainView: self.view)
     }
     

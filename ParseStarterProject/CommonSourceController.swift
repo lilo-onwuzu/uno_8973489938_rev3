@@ -73,7 +73,6 @@ class CommonSourceController: UIViewController {
     
     func moveRight(mainView: UIView) {
         let subviews = mainView.subviews
-        print(subviews.count)
         for subview in subviews {
             // move all subviews to the right except sideBar with tag 55
             if (subview.tag != 55) {
@@ -111,7 +110,6 @@ class CommonSourceController: UIViewController {
             state = false
         } else {
             hideMenu(mainView: mainView)
-            state = true
         }
     }
     
@@ -120,6 +118,7 @@ class CommonSourceController: UIViewController {
             sideBar.isHidden = true
             moveLeft(mainView: mainView)
         }
+        state = true
     }
     
     func alertWithSingleOption(title: String, message: String) {

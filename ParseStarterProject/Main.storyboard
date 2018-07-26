@@ -1928,7 +1928,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Downton Abbey Place" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="17" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WNT-tF-Aev">
-                                                    <rect key="frame" x="15" y="16" width="269" height="45"/>
+                                                    <rect key="frame" x="15" y="16" width="198.5" height="45"/>
                                                     <color key="backgroundColor" red="0.43529412150000002" green="0.4431372583" blue="0.47450980539999998" alpha="0.45566673800000002" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="45" id="jvc-Lg-LuG"/>
@@ -1938,7 +1938,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$1500 MONTHLY" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8XL-eX-r3d">
-                                                    <rect key="frame" x="17" y="66" width="156.5" height="30"/>
+                                                    <rect key="frame" x="17" y="66" width="111.5" height="30"/>
                                                     <color key="backgroundColor" red="0.43529412150000002" green="0.4431372583" blue="0.47450980539999998" alpha="0.67516588180000003" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="nee-RF-eSc"/>
@@ -1948,7 +1948,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 PEOPLE INTERESTED!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0k-LR-1Ey">
-                                                    <rect key="frame" x="180.5" y="104" width="179.5" height="21"/>
+                                                    <rect key="frame" x="241" y="104" width="119" height="21"/>
                                                     <color key="backgroundColor" red="1" green="0.71400559890000004" blue="0.68551099179999997" alpha="0.54623287669999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="21" id="ocr-zX-FSV"/>
